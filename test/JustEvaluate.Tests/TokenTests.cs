@@ -13,10 +13,7 @@ namespace JustEvaluate.Tests
 
             var token = new Token(input);
 
-            token.Type.Should().Be(TokenType.Empty);
-            token.Value.Should().BeEmpty();
-            token.Text.Should().Be(input);
-            token.NumericValue.Should().BeNull();
+            token.Assert(TokenType.Empty, string.Empty, null, input);
         }
 
         [Fact]
@@ -26,10 +23,7 @@ namespace JustEvaluate.Tests
 
             var token = new Token(input);
 
-            token.Type.Should().Be(TokenType.Empty);
-            token.Value.Should().BeEmpty();
-            token.Text.Should().Be(input);
-            token.NumericValue.Should().BeNull();
+            token.Assert(TokenType.Empty, string.Empty, null, input);
         }
 
         [Fact]
@@ -39,10 +33,7 @@ namespace JustEvaluate.Tests
 
             var token = new Token(input);
 
-            token.Type.Should().Be(TokenType.Empty);
-            token.Value.Should().BeEmpty();
-            token.Text.Should().Be(input);
-            token.NumericValue.Should().BeNull();
+            token.Assert(TokenType.Empty, string.Empty, null, input);
         }
 
         [Theory(DisplayName = "Consrtuct_From_TerminalCharText")]
@@ -78,10 +69,7 @@ namespace JustEvaluate.Tests
         {
             var token = new Token(input);
 
-            token.Type.Should().Be(type);
-            token.Value.Should().Be(input.Trim());
-            token.Text.Should().Be(input);
-            token.NumericValue.Should().BeNull();
+            token.Assert(type, input.Trim(), null, input);
         }
 
         [Theory(DisplayName = "Consrtuct_From_TerminalChar")]
@@ -89,25 +77,30 @@ namespace JustEvaluate.Tests
         [InlineData('+', TokenType.Add)]
         [InlineData('/', TokenType.Divide)]
         [InlineData('*', TokenType.Multipy)]
+        //[InlineData(')', TokenType.OpeningBracket)] // this is breaking VS Test Explorer for some reason?
         [InlineData('(', TokenType.OpeningBracket)]
-        [InlineData(')', TokenType.ClosingBracket)]
         [InlineData(',', TokenType.FunctionParameterSeparator)]
         public void Consrtuct_From_TerminalChar(char input, TokenType type)
         {
             var token = new Token(input);
 
-            token.Type.Should().Be(type);
-            token.Value.Should().Be(input.ToString());
-            token.Text.Should().Be(input.ToString());
-            token.NumericValue.Should().BeNull();
+            token.Assert(type, input.ToString(), null, input.ToString());
+        }
+
+        [Fact]
+        public void Consrtuct_From_TerminalChar_ClosingBracket()
+        {
+            var token = new Token(')');
+
+            token.Assert(TokenType.ClosingBracket, ")", null, ")");
         }
 
         [Fact]
         public void Consrtuct_From_TerminalChar_NonTerminalChar_Throws()
         {
-            System.Action sss = () => { Token t = new Token('f'); };
+            Action action = () => { Token t = new Token('f'); };
 
-            sss.Should().Throw<InvalidOperationException>();
+            action.Should().Throw<InvalidOperationException>();
         }
 
         [Theory(DisplayName = "Consrtuct_From_NumericString")]
@@ -127,10 +120,7 @@ namespace JustEvaluate.Tests
         {
             var token = new Token(input);
 
-            token.Type.Should().Be(TokenType.Constant);
-            token.Value.Should().Be(input.Trim());
-            token.Text.Should().Be(input);
-            token.NumericValue.Should().Be(expected);
+            token.Assert(TokenType.Constant, input.Trim(), expected, input);
         }
 
         [Theory(DisplayName = "Consrtuct_From_Name")]
@@ -142,10 +132,7 @@ namespace JustEvaluate.Tests
         {
             var token = new Token(input);
 
-            token.Type.Should().Be(TokenType.Name);
-            token.Value.Should().Be(input.Trim());
-            token.Text.Should().Be(input);
-            token.NumericValue.Should().BeNull();
+            token.Assert(TokenType.Name, input.Trim(), null, input);
         }
 
         [Theory]
@@ -159,10 +146,7 @@ namespace JustEvaluate.Tests
         {
             var token = new Token(value);
 
-            token.Type.Should().Be(TokenType.Constant);
-            token.Value.Should().Be(textValue);
-            token.Text.Should().Be(textValue);
-            token.NumericValue.Should().Be(value);
+            token.Assert(TokenType.Constant, textValue, value, textValue);
         }
 
         [Theory]
@@ -294,6 +278,52 @@ namespace JustEvaluate.Tests
             var token = new Token(text);
 
             token.IsName.Should().Be(isName);
+        }
+
+        [Fact]
+        public void Constant_IsRecognized()
+        {
+            var token = new Token(1);
+
+            token.IsConstant.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Function_IsRecognized()
+        {
+            var token = new Token("aaa");
+            token.ChangeToFunction();
+
+            token.IsFunction.Should().BeTrue();
+        }
+
+        [Fact]
+        public void ChangeToFunction_ChangesName()
+        {
+            var token = new Token("a a a");
+            token.ChangeToFunction();
+
+            token.IsFunction.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData(" ")]
+        [InlineData("1")]
+        [InlineData("*")]
+        [InlineData("+")]
+        [InlineData("-")]
+        [InlineData("/")]
+        [InlineData("(")]
+        [InlineData(")")]
+        [InlineData(",")]
+
+        public void ChangeToFunction_ChangesNameOnly(string text)
+        {
+            var token = new Token(text);
+
+            Action action = () => token.ChangeToFunction();
+
+            action.Should().Throw<Exception>($"Cannot change '{token.Type}' to function");
         }
     }
 }

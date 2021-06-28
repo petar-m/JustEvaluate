@@ -6,14 +6,14 @@ namespace JustEvaluate
     {
         public static TokenType ToTokenType(this char c)
         {
-            switch (c)
+            switch(c)
             {
                 case '-': return TokenType.Subtract;
                 case '+': return TokenType.Add;
-                case '/': return TokenType.Divide ;
-                case '*': return TokenType.Multipy ;
-                case '(': return TokenType.OpeningBracket ;
-                case ')': return TokenType.ClosingBracket ;
+                case '/': return TokenType.Divide;
+                case '*': return TokenType.Multipy;
+                case '(': return TokenType.OpeningBracket;
+                case ')': return TokenType.ClosingBracket;
                 case ',': return TokenType.FunctionParameterSeparator;
                 default: throw new InvalidOperationException($"No TokenType for char '{c}'");
             }

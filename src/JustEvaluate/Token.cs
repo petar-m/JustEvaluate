@@ -16,18 +16,18 @@ namespace JustEvaluate
             var trimmedText = text.Trim();
             Value = trimmedText;
 
-            if (text.Length == 0 || trimmedText.Length == 0)
+            if(text.Length == 0 || trimmedText.Length == 0)
             {
                 Type = TokenType.Empty;
             }
-            else if (trimmedText[0].IsTerminalChar())
+            else if(trimmedText[0].IsTerminalChar())
             {
                 Type = trimmedText[0].ToTokenType();
             }
-            else if (trimmedText[0].IsNumericPart())
+            else if(trimmedText[0].IsNumericPart())
             {
                 Type = TokenType.Constant;
-                NumericValue = decimal.Parse(trimmedText, _decimalFormat);
+                NumericValue = decimal.Parse(trimmedText, NumberStyles.Any, _decimalFormat);
             }
             else
             {
@@ -45,7 +45,7 @@ namespace JustEvaluate
 
         public Token(char c)
         {
-            if (!c.IsTerminalChar())
+            if(!c.IsTerminalChar())
             {
                 throw new InvalidOperationException($"Character '{c}' is not terminal");
             }
@@ -83,8 +83,6 @@ namespace JustEvaluate
 
         public bool IsFunction => Type == TokenType.Function;
 
-        public bool IsPossibleUnaryOperator => Type == TokenType.Add || Type == TokenType.Subtract;
-
         public bool IsFunctionParameterSeparator => Type == TokenType.FunctionParameterSeparator;
 
         public bool IsName => Type == TokenType.Name;
@@ -95,7 +93,7 @@ namespace JustEvaluate
 
         public void ChangeToFunction()
         {
-            if (!IsName)
+            if(!IsName)
             {
                 throw new InvalidOperationException($"Cannot change '{Type}' to function");
             }

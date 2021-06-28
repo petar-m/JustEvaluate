@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustEvaluate", "src\JustEva
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7BAE4F98-D64C-425F-82D6-76B856C54831}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustEvaluate.Tests", "test\JustEvaluate.Tests\JustEvaluate.Tests.csproj", "{99DDBF65-603E-445E-8CAB-3CE564A8FE55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustEvaluate.Tests", "test\JustEvaluate.Tests\JustEvaluate.Tests.csproj", "{99DDBF65-603E-445E-8CAB-3CE564A8FE55}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{64F2B823-17AB-4F8A-A791-912793AFAE13}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
