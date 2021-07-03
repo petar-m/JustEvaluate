@@ -22,7 +22,7 @@ namespace JustEvaluate
             }
             else if(trimmedText[0].IsTerminalChar())
             {
-                Type = trimmedText[0].ToTokenType();
+                Type = trimmedText[0].TerminalCharToTokenType();
             }
             else if(trimmedText[0].IsNumericPart())
             {
@@ -45,12 +45,7 @@ namespace JustEvaluate
 
         public Token(char c)
         {
-            if(!c.IsTerminalChar())
-            {
-                throw new InvalidOperationException($"Character '{c}' is not terminal");
-            }
-
-            Type = c.ToTokenType();
+            Type = c.TerminalCharToTokenType();
             Text = c.ToString();
             Value = Text;
         }

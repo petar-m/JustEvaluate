@@ -4,19 +4,38 @@ namespace JustEvaluate
 {
     public static class CharExtensions
     {
-        public static TokenType ToTokenType(this char c)
+        public static TokenType TerminalCharToTokenType(this char c)
         {
-            switch(c)
+            if(c.IsMinus())
             {
-                case '-': return TokenType.Subtract;
-                case '+': return TokenType.Add;
-                case '/': return TokenType.Divide;
-                case '*': return TokenType.Multipy;
-                case '(': return TokenType.OpeningBracket;
-                case ')': return TokenType.ClosingBracket;
-                case ',': return TokenType.FunctionParameterSeparator;
-                default: throw new InvalidOperationException($"No TokenType for char '{c}'");
+                return TokenType.Subtract;
             }
+            else if(c.IsPlus())
+            {
+                return TokenType.Add;
+            }
+            else if(c.IsDivide())
+            {
+                return TokenType.Divide;
+            }
+            else if(c.IsMiltiply())
+            {
+                return TokenType.Multipy;
+            }
+            else if(c.IsOpeningBracket())
+            {
+                return TokenType.OpeningBracket;
+            }
+            else if(c.IsClosingBracket())
+            {
+                return TokenType.ClosingBracket;
+            }
+            else if(c.IsFunctionParameterSeparator())
+            {
+                return TokenType.FunctionParameterSeparator;
+            }
+
+            throw new InvalidOperationException($"Character '{c}' is not terminal");
         }
 
         public static bool IsTerminalChar(this char c) => c.IsOperator() || c.IsBracket() || c.IsFunctionParameterSeparator();
