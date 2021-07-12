@@ -265,6 +265,19 @@ namespace JustEvaluate.Tests
             action.Should().Throw<Exception>("Mismatched brackets");
         }
 
+        [Theory]
+        [InlineData("func(1),1")]
+        [InlineData(",1")]
+        [InlineData("1,")]
+        [InlineData("1,1+3")]
+        [InlineData("1+3,1")]
+        public void MisplacedParameterSeparator_Throws(string input)
+        {
+            Action action = () => _parser.Parse(input).ToArray();
+
+            action.Should().Throw<InvalidOperationException>("Misplaced function parameter separator");
+        }
+
         [Fact]
         public void Function_WithoutArguments()
         {

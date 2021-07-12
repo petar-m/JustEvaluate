@@ -94,6 +94,11 @@ namespace JustEvaluate
                     }
 
                     removeTokens.Add(tokens[i]);
+                    if(functionsStack.Count == 0)
+                    {
+                        throw new InvalidOperationException("Misplaced function parameter separator");
+                    }
+
                     functionsStack.Peek().FunctionArguments.Add(new List<Token>());
                 }
                 else if(tokens[i].IsClosingBracket)

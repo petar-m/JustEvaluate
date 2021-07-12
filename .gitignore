@@ -348,3 +348,8 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# custom
+test/JustEvaluate.Tests/TestResults/*
+test/JustEvaluate.Tests/coveragereport/*
+

@@ -52,7 +52,7 @@ namespace JustEvaluate
 
         public string Text { get; }
 
-        public string Value { get; }
+        public string Value { get; private set; }
 
         public decimal? NumericValue { get; }
 
@@ -84,7 +84,25 @@ namespace JustEvaluate
 
         public bool IsEmpty => Type == TokenType.Empty;
 
-        public bool LessOrEqualPrecendanceOver(Token token) => Type <= token.Type;
+        public bool LessOrEqualPrecendanceOver(Token token)
+        {
+            if(!IsOperator || !token.IsOperator)
+            {
+                throw new InvalidOperationException("Only operators support precendence");
+            }
+
+            if((IsAdd || IsSubtract) && (token.IsAdd || token.IsSubtract))
+            {
+                return true;
+            }
+
+            if((IsMultiply || IsDivide) && (token.IsMultiply || token.IsDivide))
+            {
+                return true;
+            }
+
+            return Type <= token.Type;
+        }
 
         public void ChangeToFunction()
         {
@@ -95,5 +113,7 @@ namespace JustEvaluate
 
             Type = TokenType.Function;
         }
+
+        public void ChangeValueTo(string value) => Value = value;
     }
 }

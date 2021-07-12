@@ -325,5 +325,53 @@ namespace JustEvaluate.Tests
 
             action.Should().Throw<Exception>($"Cannot change '{token.Type}' to function");
         }
+
+        [Theory]
+        [InlineData("+", "a")]
+        [InlineData("-", "a")]
+        [InlineData("*", "a")]
+        [InlineData("/", "a")]
+        [InlineData("a", "+")]
+        [InlineData("a", "-")]
+        [InlineData("a", "*")]
+        [InlineData("a", "/")]
+        [InlineData("a", ")")]
+        public void LessOrEqualPrecendanceOver_WhenTokenIsNotOperator_Throws(string x, string y)
+        {
+            var token1 = new Token(x);
+            var token2 = new Token(y);
+
+            Action action = () => token1.LessOrEqualPrecendanceOver(token2);
+
+            action.Should().Throw<InvalidOperationException>("Only operators support precendence");
+        }
+
+        [Theory]
+        [InlineData("+", "+", true)]
+        [InlineData("+", "-", true)]
+        [InlineData("+", "*", true)]
+        [InlineData("+", "/", true)]
+        [InlineData("-", "+", true)]
+        [InlineData("-", "-", true)]
+        [InlineData("-", "*", true)]
+        [InlineData("-", "/", true)]
+        [InlineData("*", "+", false)]
+        [InlineData("*", "-", false)]
+        [InlineData("*", "*", true)]
+        [InlineData("*", "/", true)]
+        [InlineData("/", "+", false)]
+        [InlineData("/", "-", false)]
+        [InlineData("/", "*", true)]
+        [InlineData("/", "/", true)]
+        public void LessOrEqualPrecendanceOver(string x, string y, bool expected)
+        {
+            var token1 = new Token(x);
+            var token2 = new Token(y);
+
+            bool result = token1.LessOrEqualPrecendanceOver(token2);
+
+            result.Should().Be(expected);
+        }
     }
 }
+
