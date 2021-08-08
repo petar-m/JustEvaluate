@@ -6,32 +6,29 @@ namespace JustEvaluate
 {
     public class Functions
     {
-        private readonly bool _allowOverride;
-
-        public Functions(bool allowOverride)
+        public Functions()
         {
-            _allowOverride = allowOverride;
         }
 
         private readonly Dictionary<int, Dictionary<string, LambdaExpression>> _functions = new Dictionary<int, Dictionary<string, LambdaExpression>>();
 
-        public void Add(string name, Expression<Func<decimal>> function) => AddInternal(name, function);
+        public void Add(string name, Expression<Func<decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
 
-        public void Add(string name, Expression<Func<decimal, decimal>> function) => AddInternal(name, function);
+        public void Add(string name, Expression<Func<decimal, decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
 
-        public void Add(string name, Expression<Func<decimal, decimal, decimal>> function) => AddInternal(name, function);
+        public void Add(string name, Expression<Func<decimal, decimal, decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
 
-        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal>> function) => AddInternal(name, function);
+        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
 
-        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal>> function) => AddInternal(name, function);
+        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
 
-        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal>> function) => AddInternal(name, function);
+        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
 
-        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal, decimal>> function) => AddInternal(name, function);
+        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal, decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
 
-        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal, decimal, decimal>> function) => AddInternal(name, function);
+        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal, decimal, decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
 
-        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal, decimal, decimal, decimal>> function) => AddInternal(name, function);
+        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal, decimal, decimal, decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
 
         public LambdaExpression Get(string name, int parametersCount)
         {
@@ -43,7 +40,7 @@ namespace JustEvaluate
             return function;
         }
 
-        private void AddInternal(string name, LambdaExpression expression)
+        private void AddInternal(string name, LambdaExpression expression, bool allowOverride)
         {
             int argumentsCount = expression.Parameters.Count;
 
@@ -51,7 +48,7 @@ namespace JustEvaluate
             {
                 _functions.Add(argumentsCount, new Dictionary<string, LambdaExpression>(StringComparer.OrdinalIgnoreCase) { { name, expression } });
             }
-            else if(_allowOverride)
+            else if(allowOverride)
             {
                 functions[name] = expression;
             }

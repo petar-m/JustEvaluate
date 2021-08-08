@@ -6,14 +6,13 @@ using Xunit;
 
 namespace JustEvaluate.Tests
 {
-
     public class FunctionsTests
     {
         [Fact]
         public void Function_With_0_Parameters_IsStored()
         {
             Expression<Func<decimal>> func = () => 1m;
-            var functions = new Functions(allowOverride: false);
+            var functions = new Functions();
 
             functions.Add("func 0", func);
             var storedFunc = functions.Get("func 0", 0);
@@ -25,7 +24,7 @@ namespace JustEvaluate.Tests
         public void Function_With_1_Parameters_IsStored()
         {
             Expression<Func<decimal, decimal>> func = (p1) => 1m;
-            var functions = new Functions(allowOverride: false);
+            var functions = new Functions();
 
             functions.Add("func 1", func);
             var storedFunc = functions.Get("func 1", 1);
@@ -37,7 +36,7 @@ namespace JustEvaluate.Tests
         public void Function_With_2_Parameters_IsStored()
         {
             Expression<Func<decimal, decimal, decimal>> func = (p1, p2) => 1m;
-            var functions = new Functions(allowOverride: false);
+            var functions = new Functions();
 
             functions.Add("func 2", func);
             var storedFunc = functions.Get("func 2", 2);
@@ -49,7 +48,7 @@ namespace JustEvaluate.Tests
         public void Function_With_3_Parameters_IsStored()
         {
             Expression<Func<decimal, decimal, decimal, decimal>> func = (p1, p2, p3) => 1m;
-            var functions = new Functions(allowOverride: false);
+            var functions = new Functions();
 
             functions.Add("func 3", func);
             var storedFunc = functions.Get("func 3", 3);
@@ -61,7 +60,7 @@ namespace JustEvaluate.Tests
         public void Function_With_4_Parameters_IsStored()
         {
             Expression<Func<decimal, decimal, decimal, decimal, decimal>> func = (p1, p2, p3, p4) => 1m;
-            var functions = new Functions(allowOverride: false);
+            var functions = new Functions();
 
             functions.Add("func 4", func);
             var storedFunc = functions.Get("func 4", 4);
@@ -73,7 +72,7 @@ namespace JustEvaluate.Tests
         public void Function_With_5_Parameters_IsStored()
         {
             Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal>> func = (p1, p2, p3, p4, p5) => 1m;
-            var functions = new Functions(allowOverride: false);
+            var functions = new Functions();
 
             functions.Add("func 5", func);
             var storedFunc = functions.Get("func 5", 5);
@@ -85,7 +84,7 @@ namespace JustEvaluate.Tests
         public void Function_With_6_Parameters_IsStored()
         {
             Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal, decimal>> func = (p1, p2, p3, p4, p5, p6) => 1m;
-            var functions = new Functions(allowOverride: false);
+            var functions = new Functions();
 
             functions.Add("func 6", func);
             var storedFunc = functions.Get("func 6", 6);
@@ -97,7 +96,7 @@ namespace JustEvaluate.Tests
         public void Function_With_7_Parameters_IsStored()
         {
             Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal, decimal, decimal>> func = (p1, p2, p3, p4, p5, p6, p7) => 1m;
-            var functions = new Functions(allowOverride: false);
+            var functions = new Functions();
 
             functions.Add("func 7", func);
             var storedFunc = functions.Get("func 7", 7);
@@ -109,7 +108,7 @@ namespace JustEvaluate.Tests
         public void Function_With_8_Parameters_IsStored()
         {
             Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal, decimal, decimal, decimal>> func = (p1, p2, p3, p4, p5, p6, p7, p8) => 1m;
-            var functions = new Functions(allowOverride: false);
+            var functions = new Functions();
 
             functions.Add("func 8", func);
             var storedFunc = functions.Get("func 8", 8);
@@ -120,7 +119,7 @@ namespace JustEvaluate.Tests
         [Fact]
         public void Functions_WithSameNumberOfParmeters()
         {
-            var functions = new Functions(allowOverride: false);
+            var functions = new Functions();
             Expression<Func<decimal, decimal>> func1 = _ => 2m;
             Expression<Func<decimal, decimal>> func2 = _ => 3m;
             functions.Add("func1", func1);
@@ -136,10 +135,10 @@ namespace JustEvaluate.Tests
         [Fact]
         public void Functions_AllowOverride()
         {
-            var functions = new Functions(allowOverride: true);
+            var functions = new Functions();
             Expression<Func<decimal, decimal>> func = x => 2m;
             functions.Add("func", _ => 1m);
-            functions.Add("func", func);
+            functions.Add("func", func, allowOverride: true);
 
             var storedFunc = functions.Get("func", 1);
 
@@ -149,7 +148,7 @@ namespace JustEvaluate.Tests
         [Fact]
         public void Functions_DoesNot_AllowOverride_ThrowsException()
         {
-            var functions = new Functions(allowOverride: false);
+            var functions = new Functions();
             Expression<Func<decimal, decimal>> func = _ => 2m;
 
             functions.Add("func", _ => 1m);
@@ -161,7 +160,7 @@ namespace JustEvaluate.Tests
         [Fact]
         public void Functions_Overload()
         {
-            var functions = new Functions(allowOverride: false);
+            var functions = new Functions();
             Expression<Func<decimal>> func0 = () => 2m;
             Expression<Func<decimal, decimal>> func1 = _ => 2m;
 
@@ -175,7 +174,7 @@ namespace JustEvaluate.Tests
         [Fact]
         public void Function_NotFound_ByParameterCount_Throws()
         {
-            var functions = new Functions(allowOverride: false);
+            var functions = new Functions();
 
             Action action = () => _ = functions.Get("My Func", 1);
 
@@ -185,7 +184,7 @@ namespace JustEvaluate.Tests
         [Fact]
         public void Function_NotFound_ByName_Throws()
         {
-            var functions = new Functions(allowOverride: false);
+            var functions = new Functions();
             functions.Add("My Func", () => 0m);
 
             Action action = () => _ = functions.Get("My Func", 1);

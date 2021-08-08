@@ -17,10 +17,11 @@ namespace JustEvaluate
         public Func<decimal> Build(IEnumerable<Token> tokens)
         {
             Token[] postfixTokens = ConvertToPostfix(tokens);
+            MapPropertyNames<object>(postfixTokens);
 
             Expression expression = CalculatePostfix<object>(postfixTokens, null);
 
-            return Expression.Lambda<Func<decimal>>(expression).Compile();
+            return Expression.Lambda<Func<decimal>>(expression).Compile(preferInterpretation: false);
         }
 
         public Func<TArg, decimal> Build<TArg>(IEnumerable<Token> tokens)

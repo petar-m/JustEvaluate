@@ -17,7 +17,7 @@ namespace JustEvaluate.Tests
 
     public class BuilderTests
     {
-        public Builder CreateBuilder() => new Builder(new Functions(false));
+        public Builder CreateBuilder() => new Builder(new Functions());
 
         [Theory]
         [InlineData("1", 1)]
@@ -193,7 +193,7 @@ namespace JustEvaluate.Tests
         [Fact]
         public void Function_Name_CaseInsensitive()
         {
-            var functions = new Functions(false);
+            var functions = new Functions();
             functions.Add("always one", () => 1m);
 
             var parsed = new Parser().Parse("Always ONE()");
@@ -208,7 +208,7 @@ namespace JustEvaluate.Tests
         [Fact]
         public void Function_WithParameter()
         {
-            var functions = new Functions(false);
+            var functions = new Functions();
             functions.Add("PlusOne", x => x + 1m);
 
             var parsed = new Parser().Parse("PlusOne(3)");
@@ -223,7 +223,7 @@ namespace JustEvaluate.Tests
         [Fact]
         public void Function_WithParameterFunction()
         {
-            var functions = new Functions(false);
+            var functions = new Functions();
             functions.Add("PlusOne", x => x + 1m);
             functions.Add("Half", x => x / 2m);
 
@@ -239,7 +239,7 @@ namespace JustEvaluate.Tests
         [Fact]
         public void Function_WithParameterExpression()
         {
-            var functions = new Functions(false);
+            var functions = new Functions();
             functions.Add("PlusOne", x => x + 1m);
             functions.Add("Half", x => x / 2m);
 
@@ -255,7 +255,7 @@ namespace JustEvaluate.Tests
         [Fact]
         public void Function_WithMultipleParameterExpression()
         {
-            var functions = new Functions(false);
+            var functions = new Functions();
             functions.Add("PlusOne", x => x + 1m);
             functions.Add("Calc", (x, y, z) => x * y - z);
 
@@ -271,7 +271,7 @@ namespace JustEvaluate.Tests
         [Fact]
         public void Function_WithMultipleParameterExpression_WithArguments()
         {
-            var functions = new Functions(false);
+            var functions = new Functions();
             functions.Add("PlusOne", x => x + 1m);
             functions.Add("Calc", (x, y, z) => x * y - z);
             var arguments = new Arguments { Height = 6, Width = 4 };
@@ -288,7 +288,7 @@ namespace JustEvaluate.Tests
         [Fact]
         public void Function_WithMultipleNestedFunctions()
         {
-            var functions = new Functions(false);
+            var functions = new Functions();
             functions.Add("Plus One", x => x + 1m);
             functions.Add("Plus10", x => x + 10m);
             functions.Add("Sum", (x, y, z) => x + y + z);
