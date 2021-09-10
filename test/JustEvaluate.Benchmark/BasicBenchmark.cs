@@ -6,7 +6,7 @@ namespace JustEvaluate.Benchmark
     [SimpleJob]
     public class BasicBenchmark
     {
-        private readonly Evaluator _evaluator = new Evaluator(new Parser(), new Builder(new Functions()), new ExpressionCache());
+        private readonly Evaluator _evaluator = new Evaluator(new Parser(), new Builder(new Functions()), new CompiledExpressionsCache());
         private readonly Helper _helper = new Helper(1, 1);
         private Func<decimal> function;
         private const string expression = "1 + 1";

@@ -10,7 +10,7 @@ namespace JustEvaluate.Tests
         [Fact]
         public void Constructor_ParserIsNull_Throws()
         {
-            Action action = () => new Evaluator(null, new Builder(new Functions()), new ExpressionCache());
+            Action action = () => new Evaluator(null, new Builder(new Functions()), new CompiledExpressionsCache());
 
             action.Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("parser");
         }
@@ -18,7 +18,7 @@ namespace JustEvaluate.Tests
         [Fact]
         public void Constructor_BuilderIsNull_Throws()
         {
-            Action action = () => new Evaluator(new Parser(), null, new ExpressionCache());
+            Action action = () => new Evaluator(new Parser(), null, new CompiledExpressionsCache());
 
             action.Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("builder");
         }
@@ -46,7 +46,7 @@ namespace JustEvaluate.Tests
             var builder = A.Fake<Builder>();
             A.CallTo(() => builder.Build(tokens)).Returns(compiled);
 
-            var expressionCache = A.Fake<ExpressionCache>();
+            var expressionCache = A.Fake<CompiledExpressionsCache>();
             A.CallTo(() => expressionCache.Get(input)).Returns(null);
 
             var evaluator = new Evaluator(parser, builder, expressionCache);
@@ -73,7 +73,7 @@ namespace JustEvaluate.Tests
             var builder = A.Fake<Builder>();
             A.CallTo(() => builder.Build(tokens)).Returns(compiled);
 
-            var expressionCache = A.Fake<ExpressionCache>();
+            var expressionCache = A.Fake<CompiledExpressionsCache>();
             A.CallTo(() => expressionCache.Get(input)).Returns(compiled);
 
             var evaluator = new Evaluator(parser, builder, expressionCache);
@@ -103,7 +103,7 @@ namespace JustEvaluate.Tests
             var builder = A.Fake<Builder>();
             A.CallTo(() => builder.Build<Arguments>(tokens)).Returns(compiled);
 
-            var expressionCache = A.Fake<ExpressionCache>();
+            var expressionCache = A.Fake<CompiledExpressionsCache>();
             A.CallTo(() => expressionCache.Get<Arguments>(input)).Returns(null);
 
             var evaluator = new Evaluator(parser, builder, expressionCache);
@@ -129,7 +129,7 @@ namespace JustEvaluate.Tests
 
             var builder = A.Fake<Builder>();
 
-            var expressionCache = A.Fake<ExpressionCache>();
+            var expressionCache = A.Fake<CompiledExpressionsCache>();
             A.CallTo(() => expressionCache.Get<Arguments>(input)).Returns(compiled);
 
             var evaluator = new Evaluator(parser, builder, expressionCache);

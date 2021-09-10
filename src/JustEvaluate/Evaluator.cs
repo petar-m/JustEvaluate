@@ -6,9 +6,9 @@ namespace JustEvaluate
     {
         private readonly Parser _parser;
         private readonly Builder _builder;
-        private readonly ExpressionCache _expressionCache;
+        private readonly CompiledExpressionsCache _expressionCache;
 
-        public Evaluator(Parser parser, Builder builder, ExpressionCache expressionCache)
+        public Evaluator(Parser parser, Builder builder, CompiledExpressionsCache expressionCache)
         {
             _parser = parser ?? throw new ArgumentNullException(nameof(parser));
             _builder = builder ?? throw new ArgumentNullException(nameof(builder));
