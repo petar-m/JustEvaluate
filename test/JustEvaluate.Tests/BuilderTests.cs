@@ -4,20 +4,9 @@ using Xunit;
 
 namespace JustEvaluate.Tests
 {
-    public class Arguments
-    {
-        public decimal Width { get; set; }
-
-        public decimal Height { get; set; }
-
-        public int Count { get; set; }
-
-        public string Name { get; set; }
-    }
-
     public class BuilderTests
     {
-        public Builder CreateBuilder() => new Builder(new Functions());
+        public static Builder CreateBuilder() => new Builder(new Functions());
 
         [Theory]
         [InlineData("1", 1)]

@@ -24,8 +24,8 @@ namespace JustEvaluate.Benchmark
         [Benchmark]
         public decimal EvaluatedWithoutCache() => function();
 
-        [Benchmark]
-        public decimal EvaluatedNoWarmUp() => new Evaluator(new Parser(), new Builder(new Functions()), new ExpressionCache()).Evaluate("1 + 1");
+        //[Benchmark]
+        //public decimal EvaluatedNoWarmUp() => new Evaluator(new Parser(), new Builder(new Functions()), new ExpressionCache()).Evaluate("1 + 1");
 
         [Benchmark(Baseline = true)]
         public decimal Coded() => _helper.Basic();

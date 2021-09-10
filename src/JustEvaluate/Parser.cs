@@ -7,7 +7,7 @@ namespace JustEvaluate
 {
     public class Parser
     {
-        public IEnumerable<Token> Parse(string input)
+        public virtual IEnumerable<Token> Parse(string input)
         {
             var builder = new StringBuilder(input);
             var cleanedInput = builder.Replace("\r", string.Empty)

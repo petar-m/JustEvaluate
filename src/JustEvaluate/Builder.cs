@@ -14,7 +14,7 @@ namespace JustEvaluate
             _functions = functions;
         }
 
-        public Func<decimal> Build(IEnumerable<Token> tokens)
+        public virtual Func<decimal> Build(IEnumerable<Token> tokens)
         {
             Token[] postfixTokens = ConvertToPostfix(tokens);
             MapPropertyNames<object>(postfixTokens);
@@ -24,7 +24,7 @@ namespace JustEvaluate
             return Expression.Lambda<Func<decimal>>(expression).Compile(preferInterpretation: false);
         }
 
-        public Func<TArg, decimal> Build<TArg>(IEnumerable<Token> tokens)
+        public virtual Func<TArg, decimal> Build<TArg>(IEnumerable<Token> tokens)
         {
             var postfixTokens = ConvertToPostfix(tokens);
             MapPropertyNames<TArg>(postfixTokens);
@@ -193,12 +193,7 @@ namespace JustEvaluate
                 return Expression.Divide(op1, op2);
             }
 
-            if(token.IsSubtract)
-            {
-                return Expression.Subtract(op1, op2);
-            }
-
-            throw new InvalidOperationException(token.Value);
+            return Expression.Subtract(op1, op2);
         }
     }
 }
