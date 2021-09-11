@@ -22,15 +22,15 @@ jobs:
     - name: Build
       run: dotnet build --no-restore --configuration Release
     - name: Run Unit Tests
-      run: dotnet test --no-build --verbosity normal --configuration Release --logger trx --collect:"XPlat Code Coverage" --results-directory ./coverage
+      run: dotnet test --no-build --verbosity normal --configuration Release --logger trx --collect:"XPlat Code Coverage" --results-directory ./testresults
     - name: Unit Test Results
       uses: NasAmin/trx-parser@v0.2.0
       with:
-        TRX_PATH: test/JustEvaluate.Tests/TestResults
+        TRX_PATH: testresults
         REPO_TOKEN: ${{ github.token }}
         IGNORE_FAILURE: false
     - name: Copy Coverage
-      run: cp coverage/**/coverage.cobertura.xml coverage/coverage.cobertura.xml
+      run: cp testresults/**/coverage.cobertura.xml coverage/coverage.cobertura.xml
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.0.2
       with:
