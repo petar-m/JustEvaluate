@@ -30,11 +30,11 @@ jobs:
         REPO_TOKEN: ${{ github.token }}
         IGNORE_FAILURE: false
     - name: Copy Coverage
-      run: cp testresults/**/coverage.cobertura.xml coverage/coverage.cobertura.xml
+      run: cp testresults/**/coverage.cobertura.xml testresults/coverage.cobertura.xml
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.0.2
       with:
-        filename: coverage/coverage.cobertura.xml
+        filename: testresults/coverage.cobertura.xml
         badge: true
         format: 'markdown'
         output: 'both'
