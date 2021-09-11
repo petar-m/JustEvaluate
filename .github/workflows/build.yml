@@ -21,12 +21,11 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore --configuration Release
-    - name: Test
+    - name: Run Unit Tests
       run: dotnet test --no-build --verbosity normal --configuration Release --logger trx
-    - name: Publish Unit Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v1.19
+    - name: Unit Test Results
+      uses: NasAmin/trx-parser@v0.2.0
       with:
-        # GitHub API Access Token
-        github_token: ${{ github.token }}
-        # File patterns of test result files. Supports *, **, ?, and []. Use multiline string for multiple patterns.
-        files: test/JustEvaluate.Tests/TestResults/*.trx
+        TRX_PATH: test/JustEvaluate.Tests/TestResults/*.trx
+        REPO_TOKEN: ${{ github.token }}
+        IGNORE_FAILURE: false
