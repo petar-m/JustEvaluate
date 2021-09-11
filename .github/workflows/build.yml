@@ -26,6 +26,6 @@ jobs:
     - name: Unit Test Results
       uses: NasAmin/trx-parser@v0.2.0
       with:
-        TRX_PATH: test/JustEvaluate.Tests/TestResults/*.trx
+        TRX_PATH: test/JustEvaluate.Tests/TestResults
         REPO_TOKEN: ${{ github.token }}
         IGNORE_FAILURE: false
