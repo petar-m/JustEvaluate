@@ -42,5 +42,4 @@ jobs:
       uses: actions/upload-artifact@v2.2.4
       with:
         name: Test Coverage
-        path: testresults/code-coverage-results.md
-        retention-days: 1
+        path: code-coverage-results.md
