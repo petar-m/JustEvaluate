@@ -38,3 +38,10 @@ jobs:
         badge: true
         format: 'markdown'
         output: 'both'
+    - name: cobertura-report
+      uses: 5monkeys/cobertura-action@v9
+      with:
+        repo_token: ${{ github.token }}
+        path: testresults/coverage.cobertura.xml
+        skip_covered: false
+        minimum_coverage: 80
