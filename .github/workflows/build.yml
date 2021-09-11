@@ -38,7 +38,9 @@ jobs:
         badge: true
         format: 'markdown'
         output: 'both'
-    - name: Create code coverage report
-      run: |
-        dotnet tool install -g dotnet-reportgenerator-globaltool
-        reportgenerator -reports:testresults/coverage.cobertura.xml -targetdir:CodeCoverage -reporttypes:'Cobertura'
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.2.4
+      with:
+        name: Test Coverage
+        path: testresults/code-coverage-results.md
+        retention-days: 1
