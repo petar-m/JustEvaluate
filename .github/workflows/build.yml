@@ -38,3 +38,7 @@ jobs:
         badge: true
         format: 'markdown'
         output: 'both'
+    - name: Create code coverage report
+      run: |
+        dotnet tool install -g dotnet-reportgenerator-globaltool
+        reportgenerator -reports:testresults/coverage.cobertura.xml -targetdir:CodeCoverage -reporttypes:'Cobertura'
