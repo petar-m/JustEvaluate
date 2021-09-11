@@ -38,9 +38,3 @@ jobs:
         badge: true
         format: 'markdown'
         output: 'both'
-    - name: Check Coverage
-      uses: themichaelhall/check-code-coverage@v1
-      with:
-        report: testresults/coverage.cobertura.xml
-        required-percentage: 80
-
