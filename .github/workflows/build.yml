@@ -38,8 +38,9 @@ jobs:
         badge: true
         format: 'markdown'
         output: 'both'
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2.2.4
+    - name: Check Coverage
+      uses: themichaelhall/check-code-coverage@v1
       with:
-        name: Test Coverage
-        path: code-coverage-results.md
+        report: testresults/coverage.cobertura.xml
+        required-percentage: 80
+
