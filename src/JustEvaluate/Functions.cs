@@ -12,23 +12,23 @@ namespace JustEvaluate
 
         private readonly Dictionary<int, Dictionary<string, LambdaExpression>> _functions = new Dictionary<int, Dictionary<string, LambdaExpression>>();
 
-        public void Add(string name, Expression<Func<decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
+        public void Add(string name, Expression<Func<decimal>> function, bool allowReplace = false) => AddInternal(name, function, allowReplace);
 
-        public void Add(string name, Expression<Func<decimal, decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
+        public void Add(string name, Expression<Func<decimal, decimal>> function, bool allowReplace = false) => AddInternal(name, function, allowReplace);
 
-        public void Add(string name, Expression<Func<decimal, decimal, decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
+        public void Add(string name, Expression<Func<decimal, decimal, decimal>> function, bool allowReplace = false) => AddInternal(name, function, allowReplace);
 
-        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
+        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal>> function, bool allowReplace = false) => AddInternal(name, function, allowReplace);
 
-        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
+        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal>> function, bool allowReplace = false) => AddInternal(name, function, allowReplace);
 
-        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
+        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal>> function, bool allowReplace = false) => AddInternal(name, function, allowReplace);
 
-        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal, decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
+        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal, decimal>> function, bool allowReplace = false) => AddInternal(name, function, allowReplace);
 
-        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal, decimal, decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
+        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal, decimal, decimal>> function, bool allowReplace = false) => AddInternal(name, function, allowReplace);
 
-        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal, decimal, decimal, decimal>> function, bool allowOverride = false) => AddInternal(name, function, allowOverride);
+        public void Add(string name, Expression<Func<decimal, decimal, decimal, decimal, decimal, decimal, decimal, decimal, decimal>> function, bool allowReplace = false) => AddInternal(name, function, allowReplace);
 
         public LambdaExpression Get(string name, int parametersCount)
         {
@@ -40,7 +40,7 @@ namespace JustEvaluate
             return function;
         }
 
-        private void AddInternal(string name, LambdaExpression expression, bool allowOverride)
+        private void AddInternal(string name, LambdaExpression expression, bool allowReplace)
         {
             int argumentsCount = expression.Parameters.Count;
 
@@ -48,7 +48,7 @@ namespace JustEvaluate
             {
                 _functions.Add(argumentsCount, new Dictionary<string, LambdaExpression>(StringComparer.OrdinalIgnoreCase) { { name, expression } });
             }
-            else if(allowOverride)
+            else if(allowReplace)
             {
                 functions[name] = expression;
             }

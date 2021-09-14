@@ -133,12 +133,12 @@ namespace JustEvaluate.Tests
         }
 
         [Fact]
-        public void Functions_AllowOverride()
+        public void Functions_AllowReplace()
         {
             var functions = new Functions();
             Expression<Func<decimal, decimal>> func = x => 2m;
             functions.Add("func", _ => 1m);
-            functions.Add("func", func, allowOverride: true);
+            functions.Add("func", func, allowReplace: true);
 
             var storedFunc = functions.Get("func", 1);
 
@@ -146,7 +146,7 @@ namespace JustEvaluate.Tests
         }
 
         [Fact]
-        public void Functions_DoesNot_AllowOverride_ThrowsException()
+        public void Functions_DoesNot_AllowReplace_ThrowsException()
         {
             var functions = new Functions();
             Expression<Func<decimal, decimal>> func = _ => 2m;
