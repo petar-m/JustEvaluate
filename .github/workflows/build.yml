@@ -89,6 +89,12 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x    
+    
     - name: Download Nuget Package
       uses: actions/download-artifact@v2.0.10
       with: 
@@ -97,4 +103,9 @@ jobs:
     - name: Download Nuget Symbols Package
       uses: actions/download-artifact@v2.0.10
       with: 
-        name: NuGet symbols package       
+        name: NuGet symbols package
+
+    - name: Publish NuGet Package
+      run: dotnet nuget push "*.nupkg" -k ${{ secrets.NUGET_API }} -s https://api.nuget.org/v3/index.json
+
+    
