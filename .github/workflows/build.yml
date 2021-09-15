@@ -24,11 +24,12 @@ jobs:
         dotnet-version: 5.0.x
     
     - id: get-version
+      name: Get Version From Branch Name
       run: |
         version=$(echo ${{ github.ref }} | cut -c 11-)
         echo "::set-output name=version::$version"
     
-    - name: Info
+    - name: Print Version Info
       run: |
         echo "version from tag - ${{steps.get-version.outputs.version}}"
         echo "is tag - $IS_TAG"
