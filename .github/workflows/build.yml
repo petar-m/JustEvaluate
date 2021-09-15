@@ -37,8 +37,13 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     
+    - name: Build Release
+      if: ${{ env.IS_TAG == 'true' }}
+      run: dotnet build --no-restore --configuration Release
+
     - name: Build
-      run: dotnet build --no-restore --configuration Release -p:PackageVersion=${{steps.get-version.outputs.version}}
+      if: ${{ env.IS_TAG == 'false' }}
+      run: dotnet build --no-restore --configuration Release -p:Version=${{steps.get-version.outputs.version}}
     
     - name: Run Unit Tests
       run: dotnet test --no-build --verbosity normal --configuration Release --logger trx --collect:"XPlat Code Coverage" --results-directory ./testresults
