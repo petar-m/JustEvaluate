@@ -18,15 +18,27 @@ jobs:
     steps:
     - name: test
       run: echo "is tag - $IS_TAG"
+      
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+    
+    - name: Get Version
+      uses: battila7/get-version-action@v2.2.1
+      env:
+        VERSION_FROM_TAG: ${{ steps.get_version.outputs.version-without-v }}
+    
+    - name: test
+      run: echo "vesrion from tag - $VERSION_FROM_TAG"
+    
     - name: Restore dependencies
       run: dotnet restore
+    
     - name: Build
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build --no-restore --configuration Release -p:PackageVersion=$VERSION_FROM_TAG
+    
     - name: Run Unit Tests
       run: dotnet test --no-build --verbosity normal --configuration Release --logger trx --collect:"XPlat Code Coverage" --results-directory ./testresults
     - name: Unit Test Results
@@ -35,8 +47,10 @@ jobs:
         TRX_PATH: testresults
         REPO_TOKEN: ${{ github.token }}
         IGNORE_FAILURE: false
+    
     - name: Copy Coverage
       run: cp testresults/**/coverage.cobertura.xml testresults/coverage.cobertura.xml
+    
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.0.2
       with:
@@ -44,16 +58,10 @@ jobs:
         badge: true
         format: 'markdown'
         output: 'both'
-    - name: Get Version
-      uses: battila7/get-version-action@v2.2.1
-      env:
-        VERSION_FROM_TAG: ${{ steps.get_version.outputs.version-without-v }}
-    - name: test
-      run: echo "vesrion from tag - $VERSION_FROM_TAG"
     
     - name: Create NuGet Package
       if: ${{ env.IS_TAG == 'true' }}    
-      run: dotnet pack src/JustEvaluate/JustEvaluate.csproj -p:PackageVersion=1.2.3-preview --output ./ --configuration Release --no-restore --no-build  -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+      run: dotnet pack src/JustEvaluate/JustEvaluate.csproj -p:PackageVersion=$VERSION_FROM_TAG --output ./ --configuration Release --no-restore --no-build  -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
     
     - name: Upload a Nuget Package Build Artifact
       if: ${{ env.IS_TAG == 'true' }}
