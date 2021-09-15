@@ -16,29 +16,28 @@ jobs:
       IS_TAG: ${{ startsWith(github.ref, 'refs/tags/') }}
 
     steps:
-    - name: test
-      run: echo "is tag - $IS_TAG"
-      
+
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
     
-    - name: Get Version
-      id: get_version
-      uses: battila7/get-version-action@v2.2.1
-      env:
-        VERSION_FROM_TAG: ${{ steps.get_version.outputs.version-without-v }}
+    - id: get-version
+      run: |
+        version=$(echo ${{ github.ref }} | cut -c 11-)
+        echo "::set-output name=version::$version"
     
-    - name: test
-      run: echo "vesrion from tag - $VERSION_FROM_TAG"
+    - name: Info
+      run: |
+        echo "version from tag - ${{steps.get-version.outputs.version}}"
+        echo "is tag - $IS_TAG"
     
     - name: Restore dependencies
       run: dotnet restore
     
     - name: Build
-      run: dotnet build --no-restore --configuration Release -p:PackageVersion=$VERSION_FROM_TAG
+      run: dotnet build --no-restore --configuration Release -p:PackageVersion=${{steps.get-version.outputs.version}}
     
     - name: Run Unit Tests
       run: dotnet test --no-build --verbosity normal --configuration Release --logger trx --collect:"XPlat Code Coverage" --results-directory ./testresults
@@ -62,7 +61,7 @@ jobs:
     
     - name: Create NuGet Package
       if: ${{ env.IS_TAG == 'true' }}    
-      run: dotnet pack src/JustEvaluate/JustEvaluate.csproj -p:PackageVersion=$VERSION_FROM_TAG --output ./ --configuration Release --no-restore --no-build  -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+      run: dotnet pack src/JustEvaluate/JustEvaluate.csproj -p:PackageVersion=${{steps.get-version.outputs.version}} --output ./ --configuration Release --no-restore --no-build  -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
     
     - name: Upload a Nuget Package Build Artifact
       if: ${{ env.IS_TAG == 'true' }}
