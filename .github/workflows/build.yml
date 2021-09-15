@@ -47,24 +47,24 @@ jobs:
     - name: Get Version
       uses: battila7/get-version-action@v2.2.1
       env:
-        VERSION_FROM_TAG: ${{  steps.get_version.outputs.version-without-v }}
+        VERSION_FROM_TAG: ${{ steps.get_version.outputs.version-without-v }}
     - name: test
       run: echo "vesrion from tag - $VERSION_FROM_TAG"
     
-    - if: $IS_TAG == 'true'
-      name: Create NuGet Package
+    - name: Create NuGet Package
+      if: ${{ env.IS_TAG == 'true' }}    
       run: dotnet pack src/JustEvaluate/JustEvaluate.csproj -p:PackageVersion=1.2.3-preview --output ./ --configuration Release --no-restore --no-build  -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
     
-    - if: $IS_TAG == 'true'
-      name: Upload a Nuget Package Build Artifact
+    - name: Upload a Nuget Package Build Artifact
+      if: ${{ env.IS_TAG == 'true' }}
       uses: actions/upload-artifact@v2.2.4
       with:
         name: NuGet package
         path: ./*.nupkg
         retention-days: 1
     
-    - if: $IS_TAG == 'true'
-      name: Upload a Nuget Symbols Package Build Artifact
+    - name: Upload a Nuget Symbols Package Build Artifact
+      if: ${{ env.IS_TAG == 'true' }}    
       uses: actions/upload-artifact@v2.2.4
       with:
         name: NuGet symbols package
