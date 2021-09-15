@@ -26,6 +26,7 @@ jobs:
         dotnet-version: 5.0.x
     
     - name: Get Version
+      id: get_version
       uses: battila7/get-version-action@v2.2.1
       env:
         VERSION_FROM_TAG: ${{ steps.get_version.outputs.version-without-v }}
