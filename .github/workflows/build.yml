@@ -43,8 +43,15 @@ jobs:
     - name: Create NuGet Package
       # if: startsWith(github.ref, 'refs/tags/')
       run: dotnet pack src/JustEvaluate/JustEvaluate.csproj -p:PackageVersion=1.2.3-preview --output ./ --configuration Release --no-restore --no-build  -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-    - name: Upload a Build Artifact
+    - name: Upload a Nuget Package Build Artifact
       uses: actions/upload-artifact@v2.2.4
       with:
+        name: NuGet package
         path: ./*.nupkg
+        retention-days: 1
+    - name: Upload a Nuget Symbols Package Build Artifact
+      uses: actions/upload-artifact@v2.2.4
+      with:
+        name: NuGet package
+        path: ./*.snupkg
         retention-days: 1
