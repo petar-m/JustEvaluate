@@ -31,7 +31,7 @@ namespace JustEvaluate.Benchmark
         public decimal UsingEvaluator() => _evaluator.Evaluate(formula, new Input { Year = Year });
 
         [Benchmark]
-        public decimal UsingCompiledExpression() => _ = _function(new Input { Year = Year });
+        public decimal UsingCompiledExpression() => _function(new Input { Year = Year });
 
         [Benchmark(Baseline = true)]
         public decimal Coded() => Calculate(new Input { Year = Year });

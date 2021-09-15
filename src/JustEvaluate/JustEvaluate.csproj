@@ -1,7 +1,29 @@
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <ProjectUrl>https://github.com/petar-m/JustEvaluate</ProjectUrl>
+    <RepositoryUrl>https://github.com/petar-m/JustEvaluate</RepositoryUrl>
+    <RespositoryType>git</RespositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <Tags>Expression Evaluate Parse Calculate Formula</Tags>
+    <Authors>Petar Marinov</Authors>
+    <Description>Expression evaluator</Description>
+    <Copyright>Copyright Petar Marinov</Copyright>
+    <PackageTags>Expression;Evaluate;Parse;Calculate;Formula</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+  </ItemGroup>
 </Project>
