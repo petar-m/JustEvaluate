@@ -7,12 +7,12 @@ namespace JustEvaluate
 {
     public class Builder
     {
-        private readonly Functions _functions;
-
-        public Builder(Functions functions)
+        public Builder(FunctionsRegistry functions)
         {
-            _functions = functions;
+            FunctionsRegistry = functions;
         }
+
+        public FunctionsRegistry FunctionsRegistry { get; }
 
         public virtual Func<decimal> Build(IEnumerable<Token> tokens)
         {
@@ -144,7 +144,7 @@ namespace JustEvaluate
                     }
                     else if(token.IsFunction)
                     {
-                        var functionCall = _functions.Get(token.Value, token.FunctionArguments.Count);
+                        var functionCall = FunctionsRegistry.Get(token.Value, token.FunctionArguments.Count);
                         var arguments = new Expression[token.FunctionArguments.Count];
 
                         for(int i = 0; i < token.FunctionArguments.Count; i++)

@@ -3,7 +3,7 @@ using Xunit;
 
 namespace JustEvaluate.Tests
 {
-    public partial class FunctionExtensionsTests
+    public partial class FunctionsRegistryExtensionsTests
     {
         [Theory]
         [InlineData(10, 20, 0)]
@@ -168,6 +168,16 @@ namespace JustEvaluate.Tests
         {
             var input = new Input { X = x, Y = y, Z = z };
             _setup.Evaluator.Evaluate("And(x, y, z)", input).Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData(11, 21, -3, 21)]
+        [InlineData(-12, 22, 0, 22)]
+        [InlineData(0, 21, -3, -3)]
+        public void If(decimal x, decimal y, decimal z, decimal expected)
+        {
+            var input = new Input { X = x, Y = y, Z = z };
+            _setup.Evaluator.Evaluate("If(x, y, z)", input).Should().Be(expected);
         }
     }
 }

@@ -3,7 +3,7 @@ using Xunit;
 
 namespace JustEvaluate.Tests
 {
-    public partial class FunctionExtensionsTests
+    public partial class FunctionsRegistryExtensionsTests
     {
         [Theory]
         [InlineData(10, 20, 10)]

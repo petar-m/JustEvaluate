@@ -3,20 +3,17 @@ using Xunit;
 
 namespace JustEvaluate.Tests
 {
-    public partial class FunctionExtensionsTests : IClassFixture<FunctionExtensionsTests.EvaluatorSetup>
+    public partial class FunctionsRegistryExtensionsTests : IClassFixture<FunctionsRegistryExtensionsTests.EvaluatorSetup>
     {
         private readonly EvaluatorSetup _setup;
 
-        public FunctionExtensionsTests(EvaluatorSetup setup) => _setup = setup;
+        public FunctionsRegistryExtensionsTests(EvaluatorSetup setup) => _setup = setup;
 
         public class EvaluatorSetup
         {
             public EvaluatorSetup()
             {
-                var functions = new Functions();
-                functions.AddLogical(allowReplace: false);
-                functions.AddMath(allowReplace: false);
-
+                var functions = new FunctionsRegistry().AddLogical(allowReplace: false).AddMath(allowReplace: false);
                 Evaluator = new Evaluator(new Parser(), new Builder(functions), new CompiledExpressionsCache());
             }
 

@@ -2,25 +2,11 @@
 
 namespace JustEvaluate.Benchmark
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
-            BenchmarkRunner.Run<BasicBenchmark>();
+            BenchmarkRunner.Run<BasicBenchmark2>();
         }
-    }
-
-    public class Helper
-    {
-        private readonly decimal _x;
-        private readonly decimal _y;
-
-        public Helper(decimal x, decimal y)
-        {
-            _x = x;
-            _y = y;
-        }
-
-        public decimal Basic() => _x + _y;
     }
 }

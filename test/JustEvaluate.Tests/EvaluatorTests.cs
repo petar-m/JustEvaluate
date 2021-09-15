@@ -10,7 +10,7 @@ namespace JustEvaluate.Tests
         [Fact]
         public void Constructor_ParserIsNull_Throws()
         {
-            Action action = () => new Evaluator(null, new Builder(new Functions()), new CompiledExpressionsCache());
+            Action action = () => new Evaluator(null, new Builder(new FunctionsRegistry()), new CompiledExpressionsCache());
 
             action.Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("parser");
         }
@@ -26,9 +26,18 @@ namespace JustEvaluate.Tests
         [Fact]
         public void Constructor_ExpressionCacheIsNull_Throws()
         {
-            Action action = () => new Evaluator(new Parser(), new Builder(new Functions()), null);
+            Action action = () => new Evaluator(new Parser(), new Builder(new FunctionsRegistry()), null);
 
             action.Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("expressionCache");
+        }
+
+        [Fact]
+        public void Evaluator_Exposes_FunctionsRegistry()
+        {
+            var functions = new FunctionsRegistry();
+            var evaluator = new Evaluator(new Parser(), new Builder(functions), new CompiledExpressionsCache());
+
+            evaluator.FunctionsRegistry.Should().BeSameAs(functions);
         }
 
         [Fact]
