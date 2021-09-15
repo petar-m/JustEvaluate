@@ -38,11 +38,11 @@ jobs:
       run: dotnet restore
     
     - name: Build Release
-      if: ${{ env.IS_TAG == 'true' }}
+      if: ${{ env.IS_TAG == 'false' }}
       run: dotnet build --no-restore --configuration Release
 
     - name: Build
-      if: ${{ env.IS_TAG == 'false' }}
+      if: ${{ env.IS_TAG == 'true' }}
       run: dotnet build --no-restore --configuration Release -p:Version=${{steps.get-version.outputs.version}}
     
     - name: Run Unit Tests
