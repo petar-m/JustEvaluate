@@ -6,7 +6,7 @@ namespace JustEvaluate.Benchmark
     {
         static void Main(string[] args)
         {
-            BenchmarkRunner.Run<BasicBenchmark2>();
+            BenchmarkRunner.Run<BasicBenchmark>();
         }
     }
 }

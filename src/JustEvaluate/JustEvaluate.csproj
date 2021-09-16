@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+﻿<?xml version="1.0" encoding="Windows-1252"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
@@ -10,11 +10,12 @@
     <RepositoryUrl>https://github.com/petar-m/JustEvaluate</RepositoryUrl>
     <RespositoryType>git</RespositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <Tags>Expression Evaluate Parse Calculate Formula</Tags>
+    <Tags>expression evaluate parse calculate formula</Tags>
     <Authors>Petar Marinov</Authors>
-    <Description>Expression evaluator</Description>
+    <PackageIcon>package-icon.png</PackageIcon>
+    <Description>A library for calculating text math expressions.</Description>
     <Copyright>Copyright Petar Marinov</Copyright>
-    <PackageTags>Expression;Evaluate;Parse;Calculate;Formula</PackageTags>
+    <PackageTags>expression;evaluate;parse;calculate;formula</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -24,6 +25,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="package-icon.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+
 </Project>

@@ -18,25 +18,29 @@ namespace JustEvaluate.Benchmark
             _evaluator = new Evaluator(new Parser(), new Builder(new FunctionsRegistry().AddMath().AddLogical()), expressionCache);
 
             // force caching
-            _evaluator.Evaluate(formula, new Input { Year = 0 });
+            _evaluator.Evaluate(formula, new Input { Amount = 0 });
 
             _function = expressionCache.Get<Input>(formula);
         }
 
-        [Benchmark]
-        public decimal UsingEvaluator() => _evaluator.Evaluate(formula, new Input {Year = 123});
+        [Params(40, 1098887)]
+        public decimal Amount { get; set; }
 
         [Benchmark]
-        public decimal UsingCompiledExpression() => _function(new Input { Year = 123 });
+        public decimal UsingEvaluator() => _evaluator.Evaluate(formula, new Input {Amount = Amount });
+
+        [Benchmark]
+        public decimal UsingCompiledExpression() => _function(new Input { Amount = Amount });
 
         [Benchmark(Baseline = true)]
-        public decimal Coded() => Calculate(new Input { Year = 123 });
-
-        public decimal Calculate(Input input) => input.Year * 10 / 100 + (decimal)Math.Sqrt((double)input.Year);
+        public decimal Coded()
+        {
+            return Amount * 10 / 100 + (decimal)Math.Sqrt((double)Amount);
+        }
     }
 
     public class Input
     {
-        public decimal Year { get; set; }
+        public decimal Amount { get; set; }
     }
 }
