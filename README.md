@@ -1,4 +1,7 @@
-# JustEvaluate
+# JustEvaluate  
+
+[![build](https://github.com/petar-m/JustEvaluate/actions/workflows//build.yml/badge.svg)](https://github.com/petar-m/JustEvaluate/actions)
+[![NuGet](https://img.shields.io/nuget/v/JustEvaluate.svg)](https://www.nuget.org/packages/JustEvaluate)  
 
 ## What does it do?
 
@@ -51,7 +54,7 @@ evaluator.FunctionsRegistry.Add("MyFunction", (x, y) => x * y + 1);
 decimal result = evaluator.Evaluate("MyFunction(2, 3)"); // result = 7
 ```  
 Function names  are case insensitive and can consist of anything but special characters `+ - * / . , ( )`   
-There are some functions defined and ready for use - check out *add link*
+There are some functions defined and ready for use - check out [Utility Functions](https://github.com/petar-m/JustEvaluate/wiki/Utility-Functions)
 
 ### Caching  
 
