@@ -15,11 +15,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.github\workflows\build.yml = .github\workflows\build.yml
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustEvaluate.Benchmark", "test\JustEvaluate.Benchmark\JustEvaluate.Benchmark.csproj", "{DDBF33A7-59E7-40D3-9D2A-BDA66E0E9A34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustEvaluate.Examples", "test\JustEvaluate.Examples\JustEvaluate.Examples.csproj", "{EAF4A20C-1640-41B3-80E2-018B75E66EC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustEvaluate.Examples", "test\JustEvaluate.Examples\JustEvaluate.Examples.csproj", "{EAF4A20C-1640-41B3-80E2-018B75E66EC9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -34,11 +34,19 @@ namespace JustEvaluate
             {
                 return TokenType.FunctionParameterSeparator;
             }
+            else if(c.IsAnd())
+            {
+                return TokenType.And;
+            }
+            else if(c.IsOr())
+            {
+                return TokenType.Or;
+            }
 
             throw new InvalidOperationException($"Character '{c}' is not terminal");
         }
 
-        public static bool IsTerminalChar(this char c) => c.IsOperator() || c.IsBracket() || c.IsFunctionParameterSeparator();
+        public static bool IsTerminalChar(this char c) => c.IsOperator() || c.IsBracket() || c.IsFunctionParameterSeparator() || c.IsAnd() || c.IsOr();
 
         public static bool IsOperator(this char c) => c.IsPlus() || c.IsMiltiply() || c.IsDivide() || c.IsMinus();
 
@@ -61,5 +69,9 @@ namespace JustEvaluate
         public static bool IsFunctionParameterSeparator(this char c) => c == ',';
 
         public static bool IsDecimalSeparator(this char c) => c == '.';
+
+        public static bool IsAnd(this char c) => c == '&';
+
+        public static bool IsOr(this char c) => c == '|';
     }
 }

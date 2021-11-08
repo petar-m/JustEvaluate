@@ -2,16 +2,18 @@
 {
     public enum TokenType
     {
-        Subtract = 0,
-        Add = 1,
-        Divide = 2,
-        Multipy = 3,
-        OpeningBracket = 4,
-        ClosingBracket = 5,
-        Constant = 6,
-        Function = 7,
-        FunctionParameterSeparator = 8,
-        Name = 9,
-        Empty = 10
+        Or = 0,
+        And = 1,
+        Subtract = 2,
+        Add = 3,
+        Divide = 4,
+        Multipy = 5,
+        OpeningBracket = 6,
+        ClosingBracket = 7,
+        Constant = 8,
+        Function = 9,
+        FunctionParameterSeparator = 10,
+        Name = 11,
+        Empty = 12
     }
 }

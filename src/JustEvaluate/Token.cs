@@ -60,7 +60,7 @@ namespace JustEvaluate
 
         public List<List<Token>> FunctionArguments { get; } = new List<List<Token>>();
 
-        public bool IsOperator => Type == TokenType.Add || Type == TokenType.Multipy || Type == TokenType.Divide || Type == TokenType.Subtract;
+        public bool IsOperator => Type == TokenType.Add || Type == TokenType.Multipy || Type == TokenType.Divide || Type == TokenType.Subtract || Type == TokenType.And || Type == TokenType.Or;
 
         public bool IsAdd => Type == TokenType.Add;
 
@@ -83,6 +83,10 @@ namespace JustEvaluate
         public bool IsName => Type == TokenType.Name;
 
         public bool IsEmpty => Type == TokenType.Empty;
+
+        public bool IsAnd => Type == TokenType.And;
+
+        public bool IsOr => Type == TokenType.Or;
 
         public bool LessOrEqualPrecendanceOver(Token token)
         {

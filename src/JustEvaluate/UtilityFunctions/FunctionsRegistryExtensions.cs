@@ -16,10 +16,6 @@ namespace JustEvaluate.UtilityFunctions
                         .Add("BetweenLeftInclusive", (x, y, z) => x >= y && x < z ? 1 : 0, allowReplace)
                         .Add("BetweenRightInclusive", (x, y, z) => x > y && x <= z ? 1 : 0, allowReplace)
                         .Add("BetweenInclusive", (x, y, z) => x >= y && x <= z ? 1 : 0, allowReplace)
-                        .Add("Or", (x, y) => x != 0 || y != 0 ? 1 : 0, allowReplace)
-                        .Add("Or", (x, y, z) => x != 0 || y != 0 || z != 0 ? 1 : 0, allowReplace)
-                        .Add("And", (x, y) => x != 0 && y != 0 ? 1 : 0, allowReplace)
-                        .Add("And", (x, y, z) => x != 0 && y != 0 && z != 0 ? 1 : 0, allowReplace)
                         .Add("If", (x, y, z) => x != 0 ? y : z);
 
         public static FunctionsRegistry AddMath(this FunctionsRegistry functions, bool allowReplace = false)

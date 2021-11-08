@@ -52,6 +52,21 @@ namespace JustEvaluate.Tests
         [InlineData("1+2*4", 9)]
         [InlineData("5/10*2", 1)]
         [InlineData("5*10/2", 25)]
+        [InlineData("2 & 3 * 10", 1)]
+        [InlineData("2 & 3 *  0", 0)]
+        [InlineData("2 | 3 * 10", 1)]
+        [InlineData("0 | 3 * 10", 1)]
+        [InlineData("0 | 3 *  0", 0)]
+        [InlineData("2 & 3 + 1", 1)]
+        [InlineData("2 & 3 - 3", 0)]
+        [InlineData("2 | 3 / 3 ", 1)]
+        [InlineData("0 | 0 * 10", 0)]
+        [InlineData("1 | 0 +  1", 1)]
+        [InlineData("1 | 0 -  1", 1)]
+        [InlineData("1 | 1 & 1", 1)]
+        [InlineData("1 | 0 & 1", 1)]
+        [InlineData("1 | 1 & 0", 1)]
+        [InlineData("1 * 1 | 1 + 1 & 1 - 1", 1)]
         public void OperatorPrecedence(string expression, decimal expected)
         {
             var parsed = new Parser().Parse(expression);

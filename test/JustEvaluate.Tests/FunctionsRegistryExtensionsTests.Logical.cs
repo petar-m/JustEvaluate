@@ -123,54 +123,6 @@ namespace JustEvaluate.Tests
         }
 
         [Theory]
-        [InlineData(11, 21, 1)]
-        [InlineData(-12, 0, 1)]
-        [InlineData(0, 11, 1)]
-        [InlineData(0, 0, 0)]
-        public void Or_2_Arguments(decimal x, decimal y, decimal expected)
-        {
-            var input = new Input { X = x, Y = y };
-            _setup.Evaluator.Evaluate("Or(x, y)", input).Should().Be(expected);
-        }
-
-        [Theory]
-        [InlineData(11, 21, -3, 1)]
-        [InlineData(-12, 22, 0, 1)]
-        [InlineData(33, 0, 0, 1)]
-        [InlineData(0, 0, 0, 0)]
-        [InlineData(0, 21, -3, 1)]
-        [InlineData(0, 0, -3, 1)]
-        public void Or_3_Arguments(decimal x, decimal y, decimal z, decimal expected)
-        {
-            var input = new Input { X = x, Y = y, Z = z };
-            _setup.Evaluator.Evaluate("Or(x, y, z)", input).Should().Be(expected);
-        }
-
-        [Theory]
-        [InlineData(11, 21, 1)]
-        [InlineData(-12, 0, 0)]
-        [InlineData(0, 11, 0)]
-        [InlineData(0, 0, 0)]
-        public void And_2_Arguments(decimal x, decimal y, decimal expected)
-        {
-            var input = new Input { X = x, Y = y };
-            _setup.Evaluator.Evaluate("And(x, y)", input).Should().Be(expected);
-        }
-
-        [Theory]
-        [InlineData(11, 21, -3, 1)]
-        [InlineData(-12, 22, 0, 0)]
-        [InlineData(33, 0, 0, 0)]
-        [InlineData(0, 0, 0, 0)]
-        [InlineData(0, 21, -3, 0)]
-        [InlineData(0, 0, -3, 0)]
-        public void And_3_Arguments(decimal x, decimal y, decimal z, decimal expected)
-        {
-            var input = new Input { X = x, Y = y, Z = z };
-            _setup.Evaluator.Evaluate("And(x, y, z)", input).Should().Be(expected);
-        }
-
-        [Theory]
         [InlineData(11, 21, -3, 21)]
         [InlineData(-12, 22, 0, 22)]
         [InlineData(0, 21, -3, -3)]

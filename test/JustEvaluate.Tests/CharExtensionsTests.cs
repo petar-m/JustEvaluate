@@ -44,7 +44,7 @@ namespace JustEvaluate.Tests
         [InlineData("a", false)]
         [InlineData("1", false)]
         [InlineData("_", false)]
-        [InlineData("!", false)]
+        [InlineData("#", false)]
         public void TerminalChar_IsRecognized(string symbol, bool expected)
         {
             var c = symbol[0];

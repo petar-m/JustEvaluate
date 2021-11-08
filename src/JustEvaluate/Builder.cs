@@ -7,6 +7,9 @@ namespace JustEvaluate
 {
     public class Builder
     {
+        private static readonly Expression Zero = Expression.Constant(0m, typeof(decimal));
+        private static readonly Expression One = Expression.Constant(1m, typeof(decimal));
+
         public Builder(FunctionsRegistry functions)
         {
             FunctionsRegistry = functions;
@@ -176,24 +179,44 @@ namespace JustEvaluate
             return calcStack.Pop();
         }
 
-        private Expression Calculate(Token token, Expression op1, Expression op2)
+        private static Expression Calculate(Token token, Expression op1, Expression op2)
         {
-            if(token.IsAdd)
+            switch(token.Type)
             {
-                return Expression.Add(op1, op2);
+                case TokenType.Add:
+                    return Expression.Add(op1, op2);
+                case TokenType.Multipy:
+                    return Expression.Multiply(op1, op2);
+                case TokenType.Divide:
+                    return Expression.Divide(op1, op2);
+                case TokenType.Subtract:
+                    return Expression.Subtract(op1, op2);
+                case TokenType.And:
+                case TokenType.Or:
+                    return CalculateBoolean(op1, op2, token.Type);
+                default:
+                    throw new InvalidOperationException($"Unknown operator '{token.Type}'");
+            }
+        }
+
+        private static Expression CalculateBoolean(Expression op1, Expression op2, TokenType tokenType)
+        {
+            var left = Expression.NotEqual(op1, Zero);
+            var right = Expression.NotEqual(op2, Zero);
+            BinaryExpression test;
+            switch(tokenType)
+            {
+                case TokenType.And:
+                    test = Expression.AndAlso(left, right);
+                    break;
+                case TokenType.Or:
+                    test = Expression.OrElse(left, right);
+                    break;
+                default:
+                    throw new InvalidOperationException($"Unknown boolean operator '{tokenType}'");
             }
 
-            if(token.IsMultiply)
-            {
-                return Expression.Multiply(op1, op2);
-            }
-
-            if(token.IsDivide)
-            {
-                return Expression.Divide(op1, op2);
-            }
-
-            return Expression.Subtract(op1, op2);
+            return Expression.Condition(test, One, Zero, typeof(decimal));
         }
     }
 }
