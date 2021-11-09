@@ -20,7 +20,9 @@ The expression is parsed, converted to expression tree, compiled and the result 
 The syntax is very narrow:  
  - numbers with `.` for decimal separator
  - operators `* / + - `
- - boolean expressions `&` (logical AND), `|` (logical OR), evaluated to **1** or **0** of type `decimal`  
+ - boolean expressions `&` (logical AND), `|` (logical OR)  
+   operands are evaluated as follows: non-zero values are treated as **true**, zero values as **false**,  
+   then boolean logic is applied to produce **1** or **0** of type `decimal`  
  - brackets `()` depending on context determine precedence of operations or enclose function arguments
  - function arguments separator `,`
  - arguments
