@@ -6,66 +6,6 @@ namespace JustEvaluate.Tests
     public partial class FunctionsRegistryExtensionsTests
     {
         [Theory]
-        [InlineData(10, 20, 0)]
-        [InlineData(20, 10, 1)]
-        [InlineData(10, 10, 0)]
-        public void GreaterThan(decimal x, decimal y, decimal expected)
-        {
-            var input = new Input { X = x, Y = y };
-            _setup.Evaluator.Evaluate("GreaterThan(x, y)", input).Should().Be(expected);
-        }
-
-        [Theory]
-        [InlineData(10, 20, 0)]
-        [InlineData(20, 10, 1)]
-        [InlineData(10, 10, 1)]
-        public void GreaterThanOrEqual(decimal x, decimal y, decimal expected)
-        {
-            var input = new Input { X = x, Y = y };
-            _setup.Evaluator.Evaluate("GreaterThanOrEqual(x, y)", input).Should().Be(expected);
-        }
-
-        [Theory]
-        [InlineData(10, 20, 1)]
-        [InlineData(20, 10, 0)]
-        [InlineData(10, 10, 0)]
-        public void LessThan(decimal x, decimal y, decimal expected)
-        {
-            var input = new Input { X = x, Y = y };
-            _setup.Evaluator.Evaluate("LessThan(x, y)", input).Should().Be(expected);
-        }
-
-        [Theory]
-        [InlineData(10, 20, 1)]
-        [InlineData(20, 10, 0)]
-        [InlineData(10, 10, 1)]
-        public void LessThanOrEqual(decimal x, decimal y, decimal expected)
-        {
-            var input = new Input { X = x, Y = y };
-            _setup.Evaluator.Evaluate("LessThanOrEqual(x, y)", input).Should().Be(expected);
-        }
-
-        [Theory]
-        [InlineData(10, 20, 0)]
-        [InlineData(20, 10, 0)]
-        [InlineData(10, 10, 1)]
-        public void EqualTo(decimal x, decimal y, decimal expected)
-        {
-            var input = new Input { X = x, Y = y };
-            _setup.Evaluator.Evaluate("EqualTo(x, y)", input).Should().Be(expected);
-        }
-
-        [Theory]
-        [InlineData(10, 20, 1)]
-        [InlineData(20, 10, 1)]
-        [InlineData(10, 10, 0)]
-        public void NotEqualTo(decimal x, decimal y, decimal expected)
-        {
-            var input = new Input { X = x, Y = y };
-            _setup.Evaluator.Evaluate("NotEqualTo(x, y)", input).Should().Be(expected);
-        }
-
-        [Theory]
         [InlineData(1, 0)]
         [InlineData(0, 1)]
         public void Not(decimal x, decimal expected)
