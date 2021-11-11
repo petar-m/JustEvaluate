@@ -5,13 +5,7 @@ namespace JustEvaluate.UtilityFunctions
     public static class FunctionsRegistryExtensions
     {
         public static FunctionsRegistry AddLogical(this FunctionsRegistry functions, bool allowReplace = false)
-            => functions.Add("GreaterThan", (x, y) => x > y ? 1 : 0, allowReplace)
-                        .Add("GreaterThanOrEqual", (x, y) => x >= y ? 1 : 0, allowReplace)
-                        .Add("LessThan", (x, y) => x < y ? 1 : 0, allowReplace)
-                        .Add("LessThanOrEqual", (x, y) => x <= y ? 1 : 0, allowReplace)
-                        .Add("EqualTo", (x, y) => x == y ? 1 : 0, allowReplace)
-                        .Add("NotEqualTo", (x, y) => x != y ? 1 : 0, allowReplace)
-                        .Add("Not", x => x == 0 ? 1 : 0, allowReplace)
+            => functions.Add("Not", x => x == 0 ? 1 : 0, allowReplace)
                         .Add("Between", (x, y, z) => x > y && x < z ? 1 : 0, allowReplace)
                         .Add("BetweenLeftInclusive", (x, y, z) => x >= y && x < z ? 1 : 0, allowReplace)
                         .Add("BetweenRightInclusive", (x, y, z) => x > y && x <= z ? 1 : 0, allowReplace)

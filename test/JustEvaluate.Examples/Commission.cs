@@ -11,11 +11,12 @@
 
             const string commission =
                 @"
-  If(LessThanOrEqual(Amount, 0), 0, 1)
-* If(BetweenInclusive(Amount, 1, 1000), 5, 1)
-* If(Between(Amount, 1000, 100000), 100 + Amount * 2 / 100 , 1)
-* If(GreaterThanOrEqual(Amount, 100000), amount * 2.5 / 100, 1)
+(Amount > 0)
+* If(Amount >= 1 & Amount <= 1000, 5, 1)
+* If(Amount > 1000 & Amount < 100000, 100 + Amount * 2 / 100 , 1)
+* If(Amount >= 100000, amount * 2.5 / 100, 1)
 ";
+
             return _evaluator.Evaluate(commission, new { amount });
         }
     }

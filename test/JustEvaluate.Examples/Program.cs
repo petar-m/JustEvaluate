@@ -1,6 +1,6 @@
-﻿using System;
-using JustEvaluate.UtilityFunctions;
+﻿using JustEvaluate.UtilityFunctions;
 using Microsoft.Extensions.DependencyInjection;
+using static System.Console;
 
 namespace JustEvaluate.Examples
 {
@@ -29,39 +29,48 @@ namespace JustEvaluate.Examples
             var converter = scope.ServiceProvider.GetRequiredService<FahrenheitToCelsiusConverter>();
             for(int i = -50; i < 120; i += 10)
             {
-                Console.WriteLine($"{i}F={converter.Convert(i):#.##}C");
+                WriteLine($"{i}F={converter.Convert(i):#.##}C");
             }
 
             var checker = scope.ServiceProvider.GetRequiredService<LeapYearChecker>();
+            WriteLine("System.DateTime.IsLeapYear()");
+            for(int i = 1890; i < 2020; i++)
+            {
+                if(checker.IsLeapYear(i))
+                {
+                    Write($"{i}, ");
+                }
+            }
+            WriteLine("\ncustom1 ---------------------------------------");
             for(int i = 1890; i < 2020; i++)
             {
                 if(checker.IsLeapYear1(i))
                 {
-                    Console.Write($"{i}, ");
+                    Write($"{i}, ");
                 }
             }
-            Console.WriteLine();
+            WriteLine("\ncustom2 ---------------------------------------");
             for(int i = 1890; i < 2020; i++)
             {
                 if(checker.IsLeapYear2(i))
                 {
-                    Console.Write($"{i}, ");
+                    Write($"{i}, ");
                 }
             }
-            Console.WriteLine();
+            WriteLine("\ncustom3 ---------------------------------------");
             for(int i = 1890; i < 2020; i++)
             {
                 if(checker.IsLeapYear3(i))
                 {
-                    Console.Write($"{i}, ");
+                    Write($"{i}, ");
                 }
             }
-            Console.WriteLine();
+            WriteLine();
 
             var commission = scope.ServiceProvider.GetRequiredService<Commission>();
             foreach(var amount in new[] { 0, 500, 50000, 200000 })
             {
-                Console.WriteLine($"amount = {amount} comission={commission.Calculate(amount)}");
+                WriteLine($"amount = {amount} comission={commission.Calculate(amount)}");
             }
         }
     }
