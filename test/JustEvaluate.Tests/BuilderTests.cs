@@ -67,7 +67,36 @@ namespace JustEvaluate.Tests
         [InlineData("1 | 0 & 1", 1)]
         [InlineData("1 | 1 & 0", 1)]
         [InlineData("1 * 1 | 1 + 1 & 1 - 1", 1)]
+        [InlineData("2 + 1 > 1", 1)]
+        [InlineData("2 + 1 = 1", 0)]
+        [InlineData("3 & 0 + 2 = 0 | 2 -3", 1)]
         public void OperatorPrecedence(string expression, decimal expected)
+        {
+            var parsed = new Parser().Parse(expression);
+            var builder = CreateBuilder();
+
+            Func<decimal> func = builder.Build(parsed);
+            decimal result = func();
+
+            result.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData("1>0", 1)]
+        [InlineData("1>=0", 1)]
+        [InlineData("1>=1", 1)]
+        [InlineData("1>=2", 0)]
+        [InlineData("1<0", 0)]
+        [InlineData("1<=0", 0)]
+        [InlineData("1<=1", 1)]
+        [InlineData("1<=2", 1)]
+        [InlineData("1=1", 1)]
+        [InlineData("1=2", 0)]
+        [InlineData("2=1", 0)]
+        [InlineData("1<>1", 0)]
+        [InlineData("1<>2", 1)]
+        [InlineData("2<>1", 1)]
+        public void RelationalExpressions(string expression, decimal expected)
         {
             var parsed = new Parser().Parse(expression);
             var builder = CreateBuilder();

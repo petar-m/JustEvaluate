@@ -322,6 +322,21 @@ namespace JustEvaluate.Tests
             action.Should().Throw<Exception>("Mismatched brackets");
         }
 
+        [Theory]
+        [InlineData("1>1", TokenType.GreaterThan)]
+        [InlineData("1>=1", TokenType.GreaterOrEqualTo)]
+        [InlineData("1=1", TokenType.EqualTo)]
+        [InlineData("1<>1", TokenType.NotEqualTo)]
+        [InlineData("1<1", TokenType.LessThan)]
+        [InlineData("1<=1", TokenType.LessOrEqualTo)]
+        public void BooleanAndRelational_IsParsed(string input, TokenType expected)
+        {
+            var result = _parser.Parse(input);
+
+            result.Should().HaveCount(3);
+            result.ToArray()[1].Type.Should().Be(expected);
+        }
+
         [Fact]
         public void Function_ExpressionArguments()
         {

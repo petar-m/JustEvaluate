@@ -21,22 +21,39 @@ The syntax is very narrow:
  - numbers with `.` for decimal separator
  - operators `* / + - `
  - boolean expressions `&` (logical AND), `|` (logical OR)  
-   operands are evaluated as follows: non-zero values are treated as **true**, zero values as **false**,  
-   then boolean logic is applied to produce **1** or **0** of type `decimal`  
+ - relational expressions `>` (greater than), `>=` (greater or equal to), `<` (less than), `<=` (less or equal to)  
+ - equality expressions `=` (equal to), `<>` (not equal to)
  - brackets `()` depending on context determine precedence of operations or enclose function arguments
  - function arguments separator `,`
  - arguments
  - functions  
+  
+### Everything is Decimal  
+
+Expressions deal with only one type: `decimal`. Function parameters and return values, arguments, numeric literals - everything is `decimal`. Result of expression evaluation is also a `decimal`. 
 
 ### Operator Precedence  
 
-| higher to lower |
-| --------------- |
-| `*` `/`         |
-| `+` `-`         |
-| `&`             |
-| `\|`            |
+| higher to lower   |
+| ----------------- |
+| `*` `/`           |
+| `+` `-`           |
+| `>` `<` `<=` `>=` |
+| `=` `<>`          |
+| `&`               |
+| `\|`              |
 
+
+### Boolean Expressions  
+
+Since the operands of boolean expression are decimals, they are evaluated as follows: 
+ - non-zero values are treated as **true**
+ - zero values are treated as **false**  
+ - boolean logic is applied to produce **1** or **0** of type `decimal`  
+
+### Relational and Equality Expressions  
+
+Similar to boolean expressions, relational and equality expressions produce **1** or **0** of type `decimal`  
 
 ### Arguments  
 

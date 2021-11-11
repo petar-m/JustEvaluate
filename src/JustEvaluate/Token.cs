@@ -9,6 +9,36 @@ namespace JustEvaluate
     public class Token
     {
         private static readonly NumberFormatInfo _decimalFormat = new NumberFormatInfo { NumberDecimalSeparator = "." };
+        private static readonly HashSet<TokenType> _operators = new HashSet<TokenType>
+        {
+            TokenType.Add,
+            TokenType.Multipy,
+            TokenType.Divide,
+            TokenType.Subtract,
+            TokenType.And,
+            TokenType.Or,
+            TokenType.EqualTo,
+            TokenType.NotEqualTo,
+            TokenType.LessOrEqualTo,
+            TokenType.LessThan,
+            TokenType.GreaterOrEqualTo,
+            TokenType.GreaterThan
+        };
+        private static readonly Dictionary<TokenType, int> _operatorPrecedence = new Dictionary<TokenType, int>
+        {
+            { TokenType.Add, 5 },
+            { TokenType.Multipy, 6 },
+            { TokenType.Divide, 6 },
+            { TokenType.Subtract, 5 },
+            { TokenType.And, 2 },
+            { TokenType.Or,1 },
+            { TokenType.EqualTo, 3 },
+            { TokenType.NotEqualTo, 3 },
+            { TokenType.LessOrEqualTo, 4 },
+            { TokenType.LessThan, 4 },
+            { TokenType.GreaterOrEqualTo, 4 },
+            { TokenType.GreaterThan,4 }
+        };
 
         public Token(string text)
         {
@@ -22,7 +52,14 @@ namespace JustEvaluate
             }
             else if(trimmedText[0].IsTerminalChar())
             {
-                Type = trimmedText[0].TerminalCharToTokenType();
+                if(trimmedText.Length == 1)
+                {
+                    Type = trimmedText[0].TerminalCharToTokenType();
+                }
+                else
+                {
+                    Type = trimmedText.ToCharArray().TerminalSequenceToTokenType();
+                }
             }
             else if(trimmedText[0].IsNumericPart())
             {
@@ -60,7 +97,7 @@ namespace JustEvaluate
 
         public List<List<Token>> FunctionArguments { get; } = new List<List<Token>>();
 
-        public bool IsOperator => Type == TokenType.Add || Type == TokenType.Multipy || Type == TokenType.Divide || Type == TokenType.Subtract || Type == TokenType.And || Type == TokenType.Or;
+        public bool IsOperator => _operators.Contains(Type);
 
         public bool IsAdd => Type == TokenType.Add;
 
@@ -84,10 +121,6 @@ namespace JustEvaluate
 
         public bool IsEmpty => Type == TokenType.Empty;
 
-        public bool IsAnd => Type == TokenType.And;
-
-        public bool IsOr => Type == TokenType.Or;
-
         public bool LessOrEqualPrecendanceOver(Token token)
         {
             if(!IsOperator || !token.IsOperator)
@@ -95,17 +128,7 @@ namespace JustEvaluate
                 throw new InvalidOperationException("Only operators support precendence");
             }
 
-            if((IsAdd || IsSubtract) && (token.IsAdd || token.IsSubtract))
-            {
-                return true;
-            }
-
-            if((IsMultiply || IsDivide) && (token.IsMultiply || token.IsDivide))
-            {
-                return true;
-            }
-
-            return Type <= token.Type;
+            return _operatorPrecedence[Type] <= _operatorPrecedence[token.Type];
         }
 
         public void ChangeToFunction()

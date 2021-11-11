@@ -34,9 +34,19 @@ namespace JustEvaluate
                 if(current.IsTerminalChar())
                 {
                     tokens.Add(new Token(input.Substring(start, length - 1)));
-                    tokens.Add(new Token(current));
-                    length = 0;
-                    start = i + 1;
+                    if(current.IsPossibleTerminalSequence() && i < input.Length - 1 && input[i + 1].IsNextInTerminalSequence())
+                    {
+                        tokens.Add(new Token(new string(new char[] { current, input[i + 1] })));
+                        length = 0;
+                        start = i + 2;
+                        i++;
+                    }
+                    else
+                    {
+                        tokens.Add(new Token(current));
+                        length = 0;
+                        start = i + 1;
+                    }
                 }
             }
 

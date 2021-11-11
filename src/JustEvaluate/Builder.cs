@@ -194,6 +194,13 @@ namespace JustEvaluate
                 case TokenType.And:
                 case TokenType.Or:
                     return CalculateBoolean(op1, op2, token.Type);
+                case TokenType.EqualTo:
+                case TokenType.NotEqualTo:
+                case TokenType.GreaterThan:
+                case TokenType.GreaterOrEqualTo:
+                case TokenType.LessThan:
+                case TokenType.LessOrEqualTo:
+                    return CalculateRelational(op1, op2, token.Type);
                 default:
                     throw new InvalidOperationException($"Unknown operator '{token.Type}'");
             }
@@ -211,6 +218,36 @@ namespace JustEvaluate
                     break;
                 case TokenType.Or:
                     test = Expression.OrElse(left, right);
+                    break;
+                default:
+                    throw new InvalidOperationException($"Unknown boolean operator '{tokenType}'");
+            }
+
+            return Expression.Condition(test, One, Zero, typeof(decimal));
+        }
+
+        private static Expression CalculateRelational(Expression op1, Expression op2, TokenType tokenType)
+        {
+            BinaryExpression test;
+            switch(tokenType)
+            {
+               case TokenType.EqualTo:
+                    test = Expression.Equal(op1, op2);
+                    break;
+                case TokenType.NotEqualTo:
+                    test = Expression.NotEqual(op1, op2);
+                    break;
+                case TokenType.GreaterThan:
+                    test = Expression.GreaterThan(op1, op2);
+                    break;
+                case TokenType.GreaterOrEqualTo:
+                    test = Expression.GreaterThanOrEqual(op1, op2);
+                    break;
+                case TokenType.LessThan:
+                    test = Expression.LessThan(op1, op2);
+                    break;
+                case TokenType.LessOrEqualTo:
+                    test = Expression.LessThanOrEqual(op1, op2);
                     break;
                 default:
                     throw new InvalidOperationException($"Unknown boolean operator '{tokenType}'");

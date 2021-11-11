@@ -42,13 +42,50 @@ namespace JustEvaluate
             {
                 return TokenType.Or;
             }
+            else if(c.IsEqualsTo())
+            {
+                return TokenType.EqualTo;
+            }
+            else if(c.IsGreaterThan())
+            {
+                return TokenType.GreaterThan;
+            }
+            else if(c.IsLessThan())
+            {
+                return TokenType.LessThan;
+            }
 
             throw new InvalidOperationException($"Character '{c}' is not terminal");
         }
 
-        public static bool IsTerminalChar(this char c) => c.IsOperator() || c.IsBracket() || c.IsFunctionParameterSeparator() || c.IsAnd() || c.IsOr();
+        public static TokenType TerminalSequenceToTokenType(this char[] chars)
+        {
+            if(chars.Length != 2)
+            {
+                throw new ArgumentException("Terminal sequence expected length is 2");
+            }
 
-        public static bool IsOperator(this char c) => c.IsPlus() || c.IsMiltiply() || c.IsDivide() || c.IsMinus();
+            if(chars[0] == '<' && chars[1] == '>')
+            {
+                return TokenType.NotEqualTo;
+            }
+
+            if(chars[0] <= '<' && chars[1] == '=')
+            {
+                return TokenType.LessOrEqualTo;
+            }
+
+            if(chars[0] <= '>' && chars[1] == '=')
+            {
+                return TokenType.GreaterOrEqualTo;
+            }
+
+            throw new ArgumentException($"Invalid terminal sequence expected '{string.Join(string.Empty, chars)}'");
+        }
+
+        public static bool IsTerminalChar(this char c) => c.IsOperator() || c.IsBracket() || c.IsFunctionParameterSeparator();
+
+        public static bool IsOperator(this char c) => c.IsPlus() || c.IsMiltiply() || c.IsDivide() || c.IsMinus() || c.IsAnd() || c.IsOr() || c.IsEqualsTo() || c.IsLessThan() || c.IsGreaterThan();
 
         public static bool IsBracket(this char c) => c.IsOpeningBracket() || c.IsClosingBracket();
 
@@ -73,5 +110,15 @@ namespace JustEvaluate
         public static bool IsAnd(this char c) => c == '&';
 
         public static bool IsOr(this char c) => c == '|';
+
+        public static bool IsEqualsTo(this char c) => c == '=';
+
+        public static bool IsGreaterThan(this char c) => c == '>';
+
+        public static bool IsLessThan(this char c) => c == '<';
+
+        public static bool IsPossibleTerminalSequence(this char c) => c.IsLessThan() || c.IsGreaterThan();
+
+        public static bool IsNextInTerminalSequence(this char c) => c.IsGreaterThan() || c.IsEqualsTo();
     }
 }

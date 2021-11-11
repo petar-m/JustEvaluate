@@ -46,6 +46,9 @@ namespace JustEvaluate.Tests
         [InlineData("&", TokenType.And)]
         [InlineData("|", TokenType.Or)]
         [InlineData(",", TokenType.FunctionParameterSeparator)]
+        [InlineData(">", TokenType.GreaterThan)]
+        [InlineData("<", TokenType.LessThan)]
+        [InlineData("=", TokenType.EqualTo)]
         [InlineData(" -", TokenType.Subtract)]
         [InlineData(" +", TokenType.Add)]
         [InlineData(" /", TokenType.Divide)]
@@ -55,6 +58,9 @@ namespace JustEvaluate.Tests
         [InlineData(" &", TokenType.And)]
         [InlineData(" |", TokenType.Or)]
         [InlineData(" ,", TokenType.FunctionParameterSeparator)]
+        [InlineData(" >", TokenType.GreaterThan)]
+        [InlineData(" <", TokenType.LessThan)]
+        [InlineData(" =", TokenType.EqualTo)]
         [InlineData("- ", TokenType.Subtract)]
         [InlineData("+ ", TokenType.Add)]
         [InlineData("/ ", TokenType.Divide)]
@@ -64,6 +70,9 @@ namespace JustEvaluate.Tests
         [InlineData("& ", TokenType.And)]
         [InlineData("| ", TokenType.Or)]
         [InlineData(", ", TokenType.FunctionParameterSeparator)]
+        [InlineData("> ", TokenType.GreaterThan)]
+        [InlineData("< ", TokenType.LessThan)]
+        [InlineData("= ", TokenType.EqualTo)]
         [InlineData(" - ", TokenType.Subtract)]
         [InlineData(" + ", TokenType.Add)]
         [InlineData(" / ", TokenType.Divide)]
@@ -73,7 +82,21 @@ namespace JustEvaluate.Tests
         [InlineData(" & ", TokenType.And)]
         [InlineData(" | ", TokenType.Or)]
         [InlineData(" , ", TokenType.FunctionParameterSeparator)]
+        [InlineData(" > ", TokenType.GreaterThan)]
+        [InlineData(" < ", TokenType.LessThan)]
+        [InlineData(" = ", TokenType.EqualTo)]
         public void Consrtuct_From_TerminalCharText(string input, TokenType type)
+        {
+            var token = new Token(input);
+
+            token.Assert(type, input.Trim(), null, input);
+        }
+
+        [Theory(DisplayName = "Consrtuct_From_TerminalCharSequenceText")]
+        [InlineData("<>", TokenType.NotEqualTo)]
+        [InlineData("<=", TokenType.LessOrEqualTo)]
+        [InlineData(">=", TokenType.GreaterOrEqualTo)]
+        public void Consrtuct_From_TerminalCharSequenceText(string input, TokenType type)
         {
             var token = new Token(input);
 
@@ -324,7 +347,6 @@ namespace JustEvaluate.Tests
         [InlineData("(")]
         [InlineData(")")]
         [InlineData(",")]
-
         public void ChangeToFunction_ChangesNameOnly(string text)
         {
             var token = new Token(text);
@@ -371,6 +393,23 @@ namespace JustEvaluate.Tests
         [InlineData("/", "-", false)]
         [InlineData("/", "*", true)]
         [InlineData("/", "/", true)]
+        [InlineData("&", "-", true)]
+        [InlineData("|", "-", true)]
+        [InlineData("|", "&", true)]
+        [InlineData(">" , "-", true)]
+        [InlineData("<" , "-", true)]
+        [InlineData(">=", "-", true)]
+        [InlineData("<=", "-", true)]
+        [InlineData("=", ">" , true)]
+        [InlineData("=", "<" , true)]
+        [InlineData("=",">=", true)]
+        [InlineData("=", "<=", true)]
+        [InlineData("<>", ">", true)]
+        [InlineData("<>", "<", true)]
+        [InlineData("<>", ">=", true)]
+        [InlineData("<>", "<=", true)]
+        [InlineData("&", "=", true)]
+        [InlineData("|", "=", true)]
         public void LessOrEqualPrecendanceOver(string x, string y, bool expected)
         {
             var token1 = new Token(x);
@@ -382,4 +421,3 @@ namespace JustEvaluate.Tests
         }
     }
 }
-
