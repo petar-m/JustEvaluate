@@ -19,6 +19,7 @@ namespace JustEvaluate
 
         public virtual Func<decimal> Build(IEnumerable<Token> tokens)
         {
+            ValidateBuiltInFunctions(tokens);
             Token[] postfixTokens = ConvertToPostfix(tokens);
             MapPropertyNames<object>(postfixTokens);
 
@@ -29,6 +30,7 @@ namespace JustEvaluate
 
         public virtual Func<TArg, decimal> Build<TArg>(IEnumerable<Token> tokens)
         {
+            ValidateBuiltInFunctions(tokens);
             var postfixTokens = ConvertToPostfix(tokens);
             MapPropertyNames<TArg>(postfixTokens);
 
@@ -37,7 +39,18 @@ namespace JustEvaluate
             return Expression.Lambda<Func<TArg, decimal>>(expression, parameter).Compile();
         }
 
-        private void MapPropertyNames<TArg>(Token[] tokens)
+        private static void ValidateBuiltInFunctions(IEnumerable<Token> tokens)
+        {
+            foreach (Token token in tokens)
+            {
+                if(token.IsFunction && FunctionsRegistry.IsBuiltInFunction(token.Value) && FunctionsRegistry.BuiltInFunctionArgumentCount(token.Value) != token.FunctionArguments.Count)
+                {
+                    throw new InvalidOperationException($"Built-in function '{token.Value}' takes {FunctionsRegistry.BuiltInFunctionArgumentCount(token.Value)} arguments but invoked with {token.FunctionArguments.Count}");    
+                }
+            }
+        }
+
+        private static void MapPropertyNames<TArg>(Token[] tokens)
         {
             // TODO: Functions supprot all kinds of names, maybe an attribute can achieve the same for properties
             // currently only casing difference is supported
@@ -63,7 +76,7 @@ namespace JustEvaluate
             }
         }
 
-        private Token[] ConvertToPostfix(IEnumerable<Token> tokens)
+        private static Token[] ConvertToPostfix(IEnumerable<Token> tokens)
         {
             var output = new Queue<Token>();
             var operators = new Stack<Token>();
@@ -147,7 +160,6 @@ namespace JustEvaluate
                     }
                     else if(token.IsFunction)
                     {
-                        var functionCall = FunctionsRegistry.Get(token.Value, token.FunctionArguments.Count);
                         var arguments = new Expression[token.FunctionArguments.Count];
 
                         for(int i = 0; i < token.FunctionArguments.Count; i++)
@@ -155,7 +167,15 @@ namespace JustEvaluate
                             arguments[i] = CalculatePostfix<TParam>(ConvertToPostfix(token.FunctionArguments[i]), param);
                         }
 
-                        calcStack.Push(Expression.Invoke(functionCall, arguments));
+                        if(FunctionsRegistry.IsBuiltInFunction(token.Value))
+                        {
+                            calcStack.Push(CreateExpressionFromBuiltInFunction(token.Value, arguments));
+                        }
+                        else
+                        {
+                            var functionCall = FunctionsRegistry.Get(token.Value, token.FunctionArguments.Count);
+                            calcStack.Push(Expression.Invoke(functionCall, arguments));
+                        }
                     }
                 }
                 else if(token.IsOperator)
@@ -231,7 +251,7 @@ namespace JustEvaluate
             BinaryExpression test;
             switch(tokenType)
             {
-               case TokenType.EqualTo:
+                case TokenType.EqualTo:
                     test = Expression.Equal(op1, op2);
                     break;
                 case TokenType.NotEqualTo:
@@ -254,6 +274,23 @@ namespace JustEvaluate
             }
 
             return Expression.Condition(test, One, Zero, typeof(decimal));
+        }
+
+        private Expression CreateExpressionFromBuiltInFunction(string name, Expression[] arguments)
+        {
+            if(string.Compare("if", name, StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                var test = Expression.NotEqual(arguments[0], Zero);
+                return Expression.Condition(test, arguments[1], arguments[2], typeof(decimal));
+            }
+
+            if(string.Compare("not", name, StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                var test = Expression.NotEqual(arguments[0], Zero);
+                return Expression.Condition(test, Zero, One, typeof(decimal));
+            }
+
+            throw new NotImplementedException($"Built-in function '{name}' is not supported.");
         }
     }
 }

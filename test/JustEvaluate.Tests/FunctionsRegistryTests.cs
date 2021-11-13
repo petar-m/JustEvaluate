@@ -190,5 +190,56 @@ namespace JustEvaluate.Tests
 
             action.Should().Throw<InvalidOperationException>().WithMessage("There is no function 'My Func' with 1 parameters defined");
         }
+
+        [Theory]
+        [InlineData("not")]
+        [InlineData("NOT")]
+        [InlineData("if")]
+        [InlineData("If")]
+        public void Register_BuiltInFunctionName_Throws(string name)
+        {
+            var functions = new FunctionsRegistry();
+
+            Action action = () => _ = functions.Add(name, () => 1m);
+
+            action.Should().Throw<InvalidOperationException>()
+                           .WithMessage($"'{name}' is reserved for built-in function and user defined function with the same name is not allowed");
+        }
+
+        [Theory]
+        [InlineData("not")]
+        [InlineData("NOT")]
+        [InlineData("if")]
+        [InlineData("If")]
+        public void BuilInFunction_IsKnown_Returns_True(string name)
+        {
+            FunctionsRegistry.IsBuiltInFunction(name).Should().BeTrue();
+        }
+
+        [Fact]
+        public void BuilInFunction_IsNotKnown_Returns_False()
+        {
+            FunctionsRegistry.IsBuiltInFunction("other").Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("not", 1)]
+        [InlineData("NOT", 1)]
+        [InlineData("if", 3)]
+        [InlineData("If", 3)]
+        public void BuiltInFunction_ArgumentCount(string name, int count)
+        {
+            FunctionsRegistry.BuiltInFunctionArgumentCount(name).Should().Be(count);
+        }
+
+        [Fact]
+        public void BuiltInFunction_ArgumentCount_UnknownFunction_Thorws()
+        {
+            const string name = "other";
+            Action action = () => _ = FunctionsRegistry.BuiltInFunctionArgumentCount(name);
+
+            action.Should().Throw<ArgumentException>()
+                           .WithMessage($"'{name}' is not a built-in function (Parameter 'name')");
+        }
     }
 }

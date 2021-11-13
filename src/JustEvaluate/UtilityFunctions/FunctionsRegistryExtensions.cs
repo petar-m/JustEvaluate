@@ -5,12 +5,10 @@ namespace JustEvaluate.UtilityFunctions
     public static class FunctionsRegistryExtensions
     {
         public static FunctionsRegistry AddLogical(this FunctionsRegistry functions, bool allowReplace = false)
-            => functions.Add("Not", x => x == 0 ? 1 : 0, allowReplace)
-                        .Add("Between", (x, y, z) => x > y && x < z ? 1 : 0, allowReplace)
+            => functions.Add("Between", (x, y, z) => x > y && x < z ? 1 : 0, allowReplace)
                         .Add("BetweenLeftInclusive", (x, y, z) => x >= y && x < z ? 1 : 0, allowReplace)
                         .Add("BetweenRightInclusive", (x, y, z) => x > y && x <= z ? 1 : 0, allowReplace)
-                        .Add("BetweenInclusive", (x, y, z) => x >= y && x <= z ? 1 : 0, allowReplace)
-                        .Add("If", (x, y, z) => x != 0 ? y : z);
+                        .Add("BetweenInclusive", (x, y, z) => x >= y && x <= z ? 1 : 0, allowReplace);
 
         public static FunctionsRegistry AddMath(this FunctionsRegistry functions, bool allowReplace = false)
             => functions.Add("Min", (x, y) => Min(x, y), allowReplace)

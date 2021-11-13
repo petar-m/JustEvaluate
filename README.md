@@ -1,3 +1,4 @@
+
 # JustEvaluate  
 
 [![build](https://github.com/petar-m/JustEvaluate/actions/workflows//build.yml/badge.svg)](https://github.com/petar-m/JustEvaluate/actions)
@@ -26,7 +27,8 @@ The syntax is very narrow:
  - brackets `()` depending on context determine precedence of operations or enclose function arguments
  - function arguments separator `,`
  - arguments
- - functions  
+ - built-in functions  
+ - user-defined functions
   
 ### Everything is Decimal  
 
@@ -74,7 +76,13 @@ class Args
 var result = evaluator.Evaluate("x + 1", new Args{ X = 1m });
 ```  
 
-### Functions  
+### Built-In Functions  
+
+Functions that are "known" and can be used without additional setup. Their names are "reserved" and cannot be overwritten by user-defined ones.  
+Curently supported are `if` and `not`.  
+[more](https://github.com/petar-m/JustEvaluate/wiki/Utility-Functions) 
+
+### User-Defined Functions  
 
 Functions are defined as `Expression<Func<decimal>>`. They always return `decimal` and can have 0 to 8 parameters, again `decimal`. Function should be registered before usage.  
 
@@ -83,7 +91,7 @@ evaluator.FunctionsRegistry.Add("MyFunction", (x, y) => x * y + 1);
 ...
 decimal result = evaluator.Evaluate("MyFunction(2, 3)"); // result = 7
 ```  
-Function names  are case insensitive and can consist of anything but special characters `+ - * / . , ( )`   
+Function names  are case insensitive and can consist of anything but special characters `+ - * / . , ( ) > < = | &`   
 There are some functions defined and ready for use - check out [Utility Functions](https://github.com/petar-m/JustEvaluate/wiki/Utility-Functions)
 
 ### Caching  

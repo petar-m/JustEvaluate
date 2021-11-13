@@ -57,14 +57,6 @@ namespace JustEvaluate.Examples
                     Write($"{i}, ");
                 }
             }
-            WriteLine("\ncustom3 ---------------------------------------");
-            for(int i = 1890; i < 2020; i++)
-            {
-                if(checker.IsLeapYear3(i))
-                {
-                    Write($"{i}, ");
-                }
-            }
             WriteLine();
 
             var commission = scope.ServiceProvider.GetRequiredService<Commission>();

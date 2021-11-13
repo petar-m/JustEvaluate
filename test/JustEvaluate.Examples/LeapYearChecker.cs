@@ -19,21 +19,12 @@ namespace JustEvaluate.Examples
         {
             var input = new Input { Year = year };
 
-            // We can use some unility functions - EqualTo, NotEqualTo, Floor, Or. All of them return 0 or 1.
+            // We can use some unility functions like Floor
             const string isLeapYear = "Year / 4 = Floor(Year / 4) & (Year / 100 <> Floor(Year / 100) | Year / 100 = Floor(Year / 100) & Year / 400 = Floor(Year / 400))";
             return _evaluator.Evaluate(isLeapYear, input) == 1m;
         }
 
         public bool IsLeapYear2(int year)
-        {
-            var input = new Input { Year = year };
-
-            // Or we can use utility function If() 
-            const string isLeapYear = "Year / 4 = Floor(Year / 4) & If(Year / 100 <> Floor(Year / 100), 1, Year / 400 = Floor(Year / 400))";
-            return _evaluator.Evaluate(isLeapYear, input) == 1m;
-        }
-
-        public bool IsLeapYear3(int year)
         {
             var input = new Input { Year = year };
 

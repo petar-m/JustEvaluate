@@ -140,10 +140,22 @@ namespace JustEvaluate.Tests
             action.Should().Throw<InvalidOperationException>().WithMessage("Mismatched brackets");
         }
 
-        [Fact]
-        public void MissingOperand_Throws()
+        [Theory]
+        [InlineData("+")]
+        [InlineData("-")]
+        [InlineData("*")]
+        [InlineData("/")]
+        [InlineData(">")]
+        [InlineData(">=")]
+        [InlineData("<")]
+        [InlineData("<=")]
+        [InlineData("=")]
+        [InlineData("<>")]
+        [InlineData("&")]
+        [InlineData("|")]
+        public void MissingOperand_Throws(string op)
         {
-            var tokens = new Token[] { new Token(1), new Token('+')};
+            var tokens = new Token[] { new Token(1), new Token(op)};
             var builder = CreateBuilder();
 
             Action action = () => builder.Build(tokens);
@@ -340,6 +352,30 @@ namespace JustEvaluate.Tests
             decimal result = func(arguments);
 
             result.Should().Be(30.25m);
+        }
+
+        [Fact]
+        public void BuiltInFunction_If_WithInvalidArgumentCount_Throws()
+        {
+            var parsed = new Parser().Parse("if(1)");
+
+            var builder = CreateBuilder();
+
+            Action action = () => _ = builder.Build<Arguments>(parsed);
+
+            action.Should().Throw<InvalidOperationException>().WithMessage("Built-in function 'if' takes 3 arguments but invoked with 1");
+        }
+
+        [Fact]
+        public void BuiltInFunction_Not_WithInvalidArgumentCount_Throws()
+        {
+            var parsed = new Parser().Parse("not(1,3)");
+
+            var builder = CreateBuilder();
+
+            Action action = () => _ = builder.Build<Arguments>(parsed);
+
+            action.Should().Throw<InvalidOperationException>().WithMessage("Built-in function 'not' takes 1 arguments but invoked with 2");
         }
     }
 }
