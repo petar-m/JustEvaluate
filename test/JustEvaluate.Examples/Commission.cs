@@ -8,7 +8,6 @@
 
         public decimal Calculate(decimal amount)
         {
-
             const string commission =
                 @"
 (Amount > 0)

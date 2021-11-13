@@ -45,7 +45,7 @@ namespace JustEvaluate
             {
                 if(token.IsFunction && FunctionsRegistry.IsBuiltInFunction(token.Value) && FunctionsRegistry.BuiltInFunctionArgumentCount(token.Value) != token.FunctionArguments.Count)
                 {
-                    throw new InvalidOperationException($"Built-in function '{token.Value}' takes {FunctionsRegistry.BuiltInFunctionArgumentCount(token.Value)} arguments but invoked with {token.FunctionArguments.Count}");    
+                    throw new InvalidOperationException($"Built-in function '{token.Value}' takes {FunctionsRegistry.BuiltInFunctionArgumentCount(token.Value)} arguments but invoked with {token.FunctionArguments.Count}");
                 }
             }
         }
@@ -278,13 +278,13 @@ namespace JustEvaluate
 
         private Expression CreateExpressionFromBuiltInFunction(string name, Expression[] arguments)
         {
-            if(string.Compare("if", name, StringComparison.OrdinalIgnoreCase) == 0)
+            if(string.Equals("if", name, StringComparison.OrdinalIgnoreCase))
             {
                 var test = Expression.NotEqual(arguments[0], Zero);
                 return Expression.Condition(test, arguments[1], arguments[2], typeof(decimal));
             }
 
-            if(string.Compare("not", name, StringComparison.OrdinalIgnoreCase) == 0)
+            if(string.Equals("not", name, StringComparison.OrdinalIgnoreCase))
             {
                 var test = Expression.NotEqual(arguments[0], Zero);
                 return Expression.Condition(test, Zero, One, typeof(decimal));
