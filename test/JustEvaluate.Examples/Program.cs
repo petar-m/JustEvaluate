@@ -9,14 +9,14 @@ namespace JustEvaluate.Examples
         static void Main()
         {
             // Create an instance - use a global one to take advantage of cached compiled expressions
-            var evaluator = new Evaluator(new Parser(), new Builder(new FunctionsRegistry().AddMath().AddLogical()), new CompiledExpressionsCache());
+            var evaluator = new Evaluator(new Parser(), new Builder(new FunctionsRegistry().AddMath()), new CompiledExpressionsCache());
 
             // Or use IoC container
             var serviceProvider = new ServiceCollection()
                                                .AddSingleton<Parser>()
                                                .AddSingleton<Builder>()
                                                .AddSingleton<CompiledExpressionsCache>()
-                                               .AddSingleton(new FunctionsRegistry().AddMath().AddLogical())
+                                               .AddSingleton(new FunctionsRegistry().AddMath())
                                                .AddSingleton<Evaluator>()
                                                // Sample classes
                                                .AddTransient<LeapYearChecker>()

@@ -13,7 +13,7 @@ namespace JustEvaluate.Tests
         {
             public EvaluatorSetup()
             {
-                var functions = new FunctionsRegistry().AddLogical(allowReplace: false).AddMath(allowReplace: false);
+                var functions = new FunctionsRegistry().AddMath(allowReplace: false);
                 Evaluator = new Evaluator(new Parser(), new Builder(functions), new CompiledExpressionsCache());
             }
 

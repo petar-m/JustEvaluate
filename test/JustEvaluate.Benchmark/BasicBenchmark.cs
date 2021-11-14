@@ -15,7 +15,7 @@ namespace JustEvaluate.Benchmark
         public void Setup()
         {
             var expressionCache = new CompiledExpressionsCache();
-            _evaluator = new Evaluator(new Parser(), new Builder(new FunctionsRegistry().AddMath().AddLogical()), expressionCache);
+            _evaluator = new Evaluator(new Parser(), new Builder(new FunctionsRegistry().AddMath()), expressionCache);
 
             // force caching
             _evaluator.Evaluate(formula, new Input { Amount = 0 });
