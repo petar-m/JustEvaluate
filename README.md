@@ -92,7 +92,24 @@ evaluator.FunctionsRegistry.Add("MyFunction", (x, y) => x * y + 1);
 decimal result = evaluator.Evaluate("MyFunction(2, 3)"); // result = 7
 ```  
 Function names  are case insensitive and can consist of anything but special characters `+ - * / . , ( ) > < = | &`   
-There are some functions defined and ready for use - check out [Utility Functions](https://github.com/petar-m/JustEvaluate/wiki/Utility-Functions)
+There are some functions defined and ready for use - check out [Utility Functions](https://github.com/petar-m/JustEvaluate/wiki/Utility-Functions)  
+
+### Aliases  
+
+Type properties can be referenced by multiple names using `AliasAttribute`.
+Aliases should be unique, cannot be the same as a property name, and cannot contain any special characters `+ - * / . , ( ) > < = | &`. 
+  
+```csharp
+class Args
+{
+    [Alias("Some cool name")]
+    [Alias("Another cool name")]
+    public decimal X { get; }
+}
+
+var result = evaluator.Evaluate("Some cool name + Another cool name", new Args{ X = 1m }); // -> 2
+```  
+
 
 ### Caching  
 

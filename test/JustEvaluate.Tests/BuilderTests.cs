@@ -155,7 +155,7 @@ namespace JustEvaluate.Tests
         [InlineData("|")]
         public void MissingOperand_Throws(string op)
         {
-            var tokens = new Token[] { new Token(1), new Token(op)};
+            var tokens = new Token[] { new Token(1), new Token(op) };
             var builder = CreateBuilder();
 
             Action action = () => builder.Build(tokens);
@@ -376,6 +376,99 @@ namespace JustEvaluate.Tests
             Action action = () => _ = builder.Build<Arguments>(parsed);
 
             action.Should().Throw<InvalidOperationException>().WithMessage("Built-in function 'not' takes 1 arguments but invoked with 2");
+        }
+
+        public class Input1
+        {
+            [Alias("Value alias")]
+            public decimal Value { get; set; }
+
+            [Alias("Numeric Value")]
+            public string Text { get; set; }
+        }
+
+        [Fact]
+        public void Property_Alias_IsUsed()
+        {
+            var input = new Input1 { Value = 123.4m };
+            var builder = CreateBuilder();
+            var parser = new Parser();
+            var tokens = parser.Parse(" Value alias + 1 ");
+
+            var func = builder.Build<Input1>(tokens);
+
+            func(input).Should().Be(input.Value + 1);
+        }
+
+        [Fact]
+        public void Property_IsNotOfType_Decimal_Throws_AliasIncludedInMessage()
+        {
+            var builder = CreateBuilder();
+            var parser = new Parser();
+            var tokens = parser.Parse(" Numeric Value + 1 ");
+
+            Action action = () => _ = builder.Build<Input1>(tokens);
+
+            action.Should().Throw<InvalidOperationException>().WithMessage("Property named 'Text' (alias 'Numeric Value') is of type String, expected Decimal");
+        }
+
+        public class Input2
+        {
+            [Alias("Value")]
+            public decimal Value { get; set; }
+        }
+
+        [Fact]
+        public void Property_AliasIsSameAsPropertyName_Throws()
+        {
+            var builder = CreateBuilder();
+            var parser = new Parser();
+            var tokens = parser.Parse(" Value + 1 ");
+
+            Action action = () => _ = builder.Build<Input2>(tokens);
+
+            action.Should().Throw<InvalidOperationException>().WithMessage("Property aliases should be unique and different than property names, diplicates: Value");
+        }
+
+        public class Input3
+        {
+            [Alias("AnotherValue")]
+            public decimal Value { get; set; }
+
+            public decimal AnotherValue { get; set; }
+        }
+
+        [Fact]
+        public void Property_AliasIsSameAsAnotherPropertyName_Throws()
+        {
+            var builder = CreateBuilder();
+            var parser = new Parser();
+            var tokens = parser.Parse(" Value + 1 ");
+
+            Action action = () => _ = builder.Build<Input3>(tokens);
+
+            action.Should().Throw<InvalidOperationException>().WithMessage("Property aliases should be unique and different than property names, diplicates: AnotherValue");
+        }
+
+        public class Input4
+        {
+            [Alias("AnotherValue")]
+            public decimal Value { get; set; }
+
+            [Alias("AnotherValue")]
+            public decimal Value2 { get; set; }
+        }
+
+        [Fact]
+        public void Property_AliasIsSameAsAnotherAlias_Throws()
+        {
+            var builder = CreateBuilder();
+            var parser = new Parser();
+            var tokens = parser.Parse(" Value + 1 ");
+
+            Action action = () => _ = builder.Build<Input4>(tokens);
+
+            action.Should().Throw<InvalidOperationException>().WithMessage("Property aliases should be unique and different than property names, diplicates: AnotherValue");
         }
     }
 }

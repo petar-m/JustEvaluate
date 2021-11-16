@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace JustEvaluate
 {
@@ -36,7 +37,7 @@ namespace JustEvaluate
 
             var parameter = Expression.Parameter(typeof(TArg));
             Expression expression = CalculatePostfix<TArg>(postfixTokens, parameter);
-            return Expression.Lambda<Func<TArg, decimal>>(expression, parameter).Compile();
+            return Expression.Lambda<Func<TArg, decimal>>(expression, parameter).Compile(preferInterpretation: false);
         }
 
         private static void ValidateBuiltInFunctions(IEnumerable<Token> tokens)
@@ -52,19 +53,31 @@ namespace JustEvaluate
 
         private static void MapPropertyNames<TArg>(Token[] tokens)
         {
-            // TODO: Functions supprot all kinds of names, maybe an attribute can achieve the same for properties
-            // currently only casing difference is supported
             var properties = typeof(TArg).GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)
-                                         .ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
+                                         .SelectMany(x => x.GetCustomAttributes(typeof(AliasAttribute), inherit: true)
+                                                           .Cast<AliasAttribute>()
+                                                           .Select(a => new { a.Name, PropertyInfo = x }).Concat(new[] { new { x.Name, PropertyInfo = x } }))
+                                         .ToList();
+            var duplicates = properties.GroupBy(x => x.Name, StringComparer.OrdinalIgnoreCase)
+                                        .Where(x => x.Count() > 1)
+                                        .Select(x => x.Key)
+                                        .ToArray();
+            if(duplicates.Length > 0)
+            {
+                throw new InvalidOperationException($"Property aliases should be unique and different than property names, diplicates: {string.Join(", ", duplicates)}");
+            }
+
+            Dictionary<string, PropertyInfo> propertyInfos = properties.ToDictionary(x => x.Name, x => x.PropertyInfo, StringComparer.OrdinalIgnoreCase);
             for(int i = 0; i < tokens.Length; i++)
             {
                 if(tokens[i].IsName)
                 {
-                    if(properties.TryGetValue(tokens[i].Value, out var propertyInfo))
+                    if(propertyInfos.TryGetValue(tokens[i].Value, out var propertyInfo))
                     {
                         if(propertyInfo.PropertyType != typeof(decimal))
                         {
-                            throw new InvalidOperationException($"Property named '{tokens[i].Value}' is of type {propertyInfo.PropertyType.Name}, expected {typeof(decimal).Name}");
+                            var alias = tokens[i].Value.Equals(propertyInfo.Name, StringComparison.OrdinalIgnoreCase) ? string.Empty : $" (alias '{tokens[i].Value}')";
+                            throw new InvalidOperationException($"Property named '{ propertyInfo.Name }'{ alias } is of type {propertyInfo.PropertyType.Name}, expected {typeof(decimal).Name}");
                         }
                         tokens[i].ChangeValueTo(propertyInfo.Name);
                     }
