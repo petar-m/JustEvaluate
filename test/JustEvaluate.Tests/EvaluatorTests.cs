@@ -32,15 +32,6 @@ namespace JustEvaluate.Tests
         }
 
         [Fact]
-        public void Evaluator_Exposes_FunctionsRegistry()
-        {
-            var functions = new FunctionsRegistry();
-            var evaluator = new Evaluator(new Parser(), new Builder(functions), new CompiledExpressionsCache());
-
-            evaluator.FunctionsRegistry.Should().BeSameAs(functions);
-        }
-
-        [Fact]
         public void Evaluate_WithNoArgument_WhenNotCached_ParsedBuiltCachedInvoked()
         {
             var input = "1 + 1";

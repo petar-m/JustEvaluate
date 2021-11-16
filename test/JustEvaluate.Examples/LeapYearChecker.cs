@@ -28,8 +28,7 @@ namespace JustEvaluate.Examples
         {
             var input = new Input { Year = year };
 
-            // Or we can define our own function
-            _evaluator.FunctionsRegistry.Add("DividesByWithoutReminder", (x, y) => (decimal)Math.IEEERemainder((double)x, (double)y) == 0m ? 1 : 0, true);
+            // Or user-defined function (check the IoC registration in Main)
             const string isLeapYear = "DividesByWithoutReminder(Year, 4) & If(Not(DividesByWithoutReminder(Year, 100)), 1, DividesByWithoutReminder(Year ,400))";
             return _evaluator.Evaluate(isLeapYear, input) == 1m;
         }

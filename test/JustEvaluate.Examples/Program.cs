@@ -1,4 +1,5 @@
-﻿using JustEvaluate.UtilityFunctions;
+﻿using System;
+using JustEvaluate.UtilityFunctions;
 using Microsoft.Extensions.DependencyInjection;
 using static System.Console;
 
@@ -16,7 +17,8 @@ namespace JustEvaluate.Examples
                                                .AddSingleton<Parser>()
                                                .AddSingleton<Builder>()
                                                .AddSingleton<CompiledExpressionsCache>()
-                                               .AddSingleton(new FunctionsRegistry().AddMath())
+                                               .AddSingleton(new FunctionsRegistry().AddMath()
+                                                                                    .Add("DividesByWithoutReminder", (x, y) => (decimal)Math.IEEERemainder((double)x, (double)y) == 0m ? 1 : 0))
                                                .AddSingleton<Evaluator>()
                                                // Sample classes
                                                .AddTransient<LeapYearChecker>()

@@ -87,7 +87,8 @@ Curently supported are `if` and `not`.
 Functions are defined as `Expression<Func<decimal>>`. They always return `decimal` and can have 0 to 8 parameters, again `decimal`. Function should be registered before usage.  
 
 ```csharp
-evaluator.FunctionsRegistry.Add("MyFunction", (x, y) => x * y + 1);
+var registry = new FunctionsRegistry().Add("MyFunction", (x, y) => x * y + 1);
+var evaluator = new Evaluator(new Parser(), new Builder(registry), new CompiledExpressionsCache());
 ...
 decimal result = evaluator.Evaluate("MyFunction(2, 3)"); // result = 7
 ```  

@@ -15,8 +15,6 @@ namespace JustEvaluate
             _expressionCache = expressionCache ?? throw new ArgumentNullException(nameof(expressionCache));
         }
 
-        public FunctionsRegistry FunctionsRegistry => _builder.FunctionsRegistry;
-
         public virtual decimal Evaluate(string input)
         {
             Func<decimal> function = _expressionCache.Get(input);
