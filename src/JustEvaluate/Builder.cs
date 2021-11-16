@@ -42,7 +42,7 @@ namespace JustEvaluate
 
         private static void ValidateBuiltInFunctions(IEnumerable<Token> tokens)
         {
-            foreach (Token token in tokens)
+            foreach(Token token in tokens)
             {
                 if(token.IsFunction && FunctionsRegistry.IsBuiltInFunction(token.Value) && FunctionsRegistry.BuiltInFunctionArgumentCount(token.Value) != token.FunctionArguments.Count)
                 {

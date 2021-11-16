@@ -51,7 +51,7 @@ namespace JustEvaluate
             }
 
             return _builtInFunctions[name];
-        } 
+        }
 
         private FunctionsRegistry AddInternal(string name, LambdaExpression expression, bool allowReplace)
         {
