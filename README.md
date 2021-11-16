@@ -111,6 +111,19 @@ class Args
 var result = evaluator.Evaluate("Some cool name + Another cool name", new Args{ X = 1m }); // -> 2
 ```  
 
+Functions can also have aliases, built-in and user defined both. Aliases should be unique, can not be the same as already defined function, and can not contain special characters.  
+
+```csharp
+var registry = new FunctionsRegistry().Add("MyFunction", (x, y) => x * y + 1)
+                                      .AddFunctionAlias(function: "MyFunction", alias: "Multiply and Add One")
+                                      .AddFunctionAlias(function: "if", alias: "iif");;
+var evaluator = new Evaluator(new Parser(), new Builder(registry), new CompiledExpressionsCache());
+...
+decimal result = evaluator.Evaluate("IIF(Multiply and Add One(2, 3), 2, 1)"); // result = 2
+```  
+
+
+Aliases for both arguments and functions are case insensitive.  
 
 ### Caching  
 

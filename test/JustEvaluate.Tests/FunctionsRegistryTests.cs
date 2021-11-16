@@ -213,13 +213,15 @@ namespace JustEvaluate.Tests
         [InlineData("If")]
         public void BuilInFunction_IsKnown_Returns_True(string name)
         {
-            FunctionsRegistry.IsBuiltInFunction(name).Should().BeTrue();
+            var functions = new FunctionsRegistry();
+            functions.IsBuiltInFunction(name).Should().BeTrue();
         }
 
         [Fact]
         public void BuilInFunction_IsNotKnown_Returns_False()
         {
-            FunctionsRegistry.IsBuiltInFunction("other").Should().BeFalse();
+            var functions = new FunctionsRegistry();
+            functions.IsBuiltInFunction("other").Should().BeFalse();
         }
 
         [Theory]
@@ -229,17 +231,92 @@ namespace JustEvaluate.Tests
         [InlineData("If", 3)]
         public void BuiltInFunction_ArgumentCount(string name, int count)
         {
-            FunctionsRegistry.BuiltInFunctionArgumentCount(name).Should().Be(count);
+            var functions = new FunctionsRegistry();
+            functions.BuiltInFunctionArgumentCount(name).Should().Be(count);
         }
 
         [Fact]
         public void BuiltInFunction_ArgumentCount_UnknownFunction_Thorws()
         {
+            var functions = new FunctionsRegistry();
             const string name = "other";
-            Action action = () => _ = FunctionsRegistry.BuiltInFunctionArgumentCount(name);
+            Action action = () => _ = functions.BuiltInFunctionArgumentCount(name);
 
             action.Should().Throw<ArgumentException>()
                            .WithMessage($"'{name}' is not a built-in function (Parameter 'name')");
+        }
+
+        [Fact]
+        public void Alias_UnknownFunction_Thorws()
+        {
+            var functions = new FunctionsRegistry();
+
+            Action action = () => _ = functions.AddFunctionAlias(function: "some function", alias: "alias");
+
+            action.Should().Throw<InvalidOperationException>()
+                           .WithMessage("There is no function 'some function' defined");
+        }
+
+        [Theory]
+        [InlineData("if")]
+        [InlineData("not")]
+        public void Alias_IsBuiltFunction_Thorws(string builtInFunction)
+        {
+            var functions = new FunctionsRegistry().Add("some function", () => 1m);
+
+            Action action = () => _ = functions.AddFunctionAlias(function: "some function", alias: builtInFunction);
+
+            action.Should().Throw<InvalidOperationException>()
+                           .WithMessage($"'{builtInFunction}' is reserved for built-in function and can not be used as alias");
+        }
+
+        [Fact]
+        public void Alias_IsRegisteredFunction_Thorws()
+        {
+            var functions = new FunctionsRegistry().Add("some function", () => 1m)
+                                                   .Add("some function 2", () => 1m);
+
+            Action action = () => _ = functions.AddFunctionAlias(function: "some function 2", alias: "some function");
+
+            action.Should().Throw<InvalidOperationException>()
+                           .WithMessage("There is function 'some function' defined and can not be used as alias");
+        }
+
+        [Fact]
+        public void Alias_AlreadyUsed_Thorws()
+        {
+            var functions = new FunctionsRegistry().Add("some function", () => 1m)
+                                                   .Add("some function 2", () => 1m);
+
+            Action action = () => _ = functions.AddFunctionAlias(function: "some function", alias: "some function alias")
+                                               .AddFunctionAlias(function: "some function 2", alias: "some function alias");
+
+            action.Should().Throw<InvalidOperationException>()
+                           .WithMessage("There is already alias 'some function alias' registered for function 'some function 2'");
+        }
+
+        [Fact]
+        public void GetOriginalName_NoAlias()
+        {
+            var functions = new FunctionsRegistry().Add("some function", () => 1m);
+
+            functions.GetOriginalName("some function").Should().Be("some function");
+        }
+
+        [Fact]
+        public void GetOriginalName_ByAlias()
+        {
+            var functions = new FunctionsRegistry().Add("some function", () => 1m).AddFunctionAlias(function: "some function", alias: "alias");
+
+            functions.GetOriginalName("alias").Should().Be("some function");
+        }
+
+        [Fact]
+        public void Alias_BuiltInFinction()
+        {
+            var functions = new FunctionsRegistry().AddFunctionAlias(function: "if", alias: "alias");
+
+            functions.IsBuiltInFunction("alias").Should().Be(true);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace JustEvaluate
 
         private List<Token> ParseToTokens(string input)
         {
-            List<Token> tokens = new List<Token>();
+            var tokens = new List<Token>();
             int length = 0;
             int start = 0;
             for(int i = 0; i < input.Length; i++)

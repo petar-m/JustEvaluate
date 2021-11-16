@@ -40,7 +40,7 @@ namespace JustEvaluate
             return Expression.Lambda<Func<TArg, decimal>>(expression, parameter).Compile(preferInterpretation: false);
         }
 
-        private static void ValidateBuiltInFunctions(IEnumerable<Token> tokens)
+        private void ValidateBuiltInFunctions(IEnumerable<Token> tokens)
         {
             foreach(Token token in tokens)
             {
@@ -53,7 +53,7 @@ namespace JustEvaluate
 
         private static void MapPropertyNames<TArg>(Token[] tokens)
         {
-            var properties = typeof(TArg).GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public)
+            var properties = typeof(TArg).GetProperties(BindingFlags.Instance | BindingFlags.Public)
                                          .SelectMany(x => x.GetCustomAttributes(typeof(AliasAttribute), inherit: true)
                                                            .Cast<AliasAttribute>()
                                                            .Select(a => new { a.Name, PropertyInfo = x }).Concat(new[] { new { x.Name, PropertyInfo = x } }))
@@ -182,7 +182,7 @@ namespace JustEvaluate
 
                         if(FunctionsRegistry.IsBuiltInFunction(token.Value))
                         {
-                            calcStack.Push(CreateExpressionFromBuiltInFunction(token.Value, arguments));
+                            calcStack.Push(CreateExpressionFromBuiltInFunction(FunctionsRegistry.GetOriginalName(token.Value), arguments));
                         }
                         else
                         {

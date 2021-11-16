@@ -452,7 +452,7 @@ namespace JustEvaluate.Tests
         [InlineData('<', '>', TokenType.NotEqualTo)]
         public void TerminalSequenceToTokenType(char c1, char c2, TokenType expected)
         {
-            var chars = new []{ c1, c2 };
+            var chars = new[] { c1, c2 };
 
             var result = chars.TerminalSequenceToTokenType();
 

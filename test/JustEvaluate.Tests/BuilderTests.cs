@@ -251,6 +251,21 @@ namespace JustEvaluate.Tests
         }
 
         [Fact]
+        public void Function_Alias_CaseInsensitive()
+        {
+            var functions = new FunctionsRegistry();
+            functions.Add("always one", () => 1m).AddFunctionAlias("always one", "only one");
+
+            var parsed = new Parser().Parse("ONLY ONE()");
+            var builder = new Builder(functions);
+
+            Func<decimal> func = builder.Build(parsed);
+            decimal result = func();
+
+            result.Should().Be(1m);
+        }
+
+        [Fact]
         public void Function_WithParameter()
         {
             var functions = new FunctionsRegistry();
@@ -469,6 +484,18 @@ namespace JustEvaluate.Tests
             Action action = () => _ = builder.Build<Input4>(tokens);
 
             action.Should().Throw<InvalidOperationException>().WithMessage("Property aliases should be unique and different than property names, diplicates: AnotherValue");
+        }
+
+        [Fact]
+        public void BuiltInFunction_Alias()
+        {
+            var functions = new FunctionsRegistry().AddFunctionAlias(function: "not", alias: "alias");
+            var builder = new Builder(functions);
+            var parser = new Parser();
+
+            var result = builder.Build(parser.Parse("alias(1)"));
+
+            result().Should().Be(0);
         }
     }
 }
