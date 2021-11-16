@@ -68,22 +68,36 @@ namespace JustEvaluate
             }
 
             Dictionary<string, PropertyInfo> propertyInfos = properties.ToDictionary(x => x.Name, x => x.PropertyInfo, StringComparer.OrdinalIgnoreCase);
-            for(int i = 0; i < tokens.Length; i++)
+
+            Map(tokens, propertyInfos);
+
+            void Map(Token[] _tokens, Dictionary<string, PropertyInfo> _propertyInfos)
             {
-                if(tokens[i].IsName)
+                for(int i = 0; i < _tokens.Length; i++)
                 {
-                    if(propertyInfos.TryGetValue(tokens[i].Value, out var propertyInfo))
+                    if(_tokens[i].IsName)
                     {
-                        if(propertyInfo.PropertyType != typeof(decimal))
+                        if(_propertyInfos.TryGetValue(_tokens[i].Value, out var propertyInfo))
                         {
-                            var alias = tokens[i].Value.Equals(propertyInfo.Name, StringComparison.OrdinalIgnoreCase) ? string.Empty : $" (alias '{tokens[i].Value}')";
-                            throw new InvalidOperationException($"Property named '{ propertyInfo.Name }'{ alias } is of type {propertyInfo.PropertyType.Name}, expected {typeof(decimal).Name}");
+                            if(propertyInfo.PropertyType != typeof(decimal))
+                            {
+                                var alias = _tokens[i].Value.Equals(propertyInfo.Name, StringComparison.OrdinalIgnoreCase) ? string.Empty : $" (alias '{_tokens[i].Value}')";
+                                throw new InvalidOperationException($"Property named '{ propertyInfo.Name }'{ alias } is of type {propertyInfo.PropertyType.Name}, expected {typeof(decimal).Name}");
+                            }
+                            _tokens[i].ChangeValueTo(propertyInfo.Name);
                         }
-                        tokens[i].ChangeValueTo(propertyInfo.Name);
+                        else
+                        {
+                            throw new InvalidOperationException($"Argument type {typeof(TArg).Name} does not have property named '{_tokens[i].Value}'");
+                        }
                     }
-                    else
+
+                    if(_tokens[i].IsFunction)
                     {
-                        throw new InvalidOperationException($"Argument type {typeof(TArg).Name} does not have property named '{tokens[i].Value}'");
+                        for(var j = 0; j < _tokens[i].FunctionArguments.Count; j++)
+                        {
+                            Map(_tokens[i].FunctionArguments[j].ToArray(), _propertyInfos);
+                        }
                     }
                 }
             }

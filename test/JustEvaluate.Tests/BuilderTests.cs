@@ -486,6 +486,39 @@ namespace JustEvaluate.Tests
             action.Should().Throw<InvalidOperationException>().WithMessage("Property aliases should be unique and different than property names, diplicates: AnotherValue");
         }
 
+        public class Input5
+        {
+            [Alias("Height")]
+            public decimal X { get; set; }
+
+            [Alias("Width")]
+            public decimal Y { get; set; }
+        }
+
+        [Fact]
+        public void Alias_PropertyIsUsed()
+        {
+            var builder = CreateBuilder();
+            var parser = new Parser();
+            var tokens = parser.Parse("Width * Height");
+
+            var result = builder.Build<Input5>(tokens);
+
+            result(new Input5 { X = 2, Y = 4 }).Should().Be(8);
+        }
+
+        [Fact]
+        public void Alias_PropertyIsUsed_WhenFunctionArgument()
+        {
+            var builder = CreateBuilder();
+            var parser = new Parser();
+            var tokens = parser.Parse("not(Width * Height)");
+
+            var result = builder.Build<Input5>(tokens);
+
+            result(new Input5 { X = 2, Y = 4 }).Should().Be(0);
+        }
+
         [Fact]
         public void BuiltInFunction_Alias()
         {
