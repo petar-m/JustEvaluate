@@ -95,6 +95,11 @@ namespace JustEvaluate
                 throw new InvalidOperationException($"'{name}' is reserved for built-in function and user defined function with the same name is not allowed");
             }
 
+            if(_aliases.ContainsKey(name))
+            {
+                throw new InvalidOperationException($"'{name}' is already added as and alias and cannot be used as function name");
+            }
+
             int argumentsCount = expression.Parameters.Count;
 
             if(!_functions.TryGetValue(argumentsCount, out var functions))

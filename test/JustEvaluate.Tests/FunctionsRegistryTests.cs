@@ -296,6 +296,18 @@ namespace JustEvaluate.Tests
         }
 
         [Fact]
+        public void AddFunction_SameAsAlias_Thorws()
+        {
+            var functions = new FunctionsRegistry().Add("some function", () => 1m)
+                                                   .AddFunctionAlias(function: "some function", alias: "alias");
+
+            Action action = () => _ = functions.Add("alias", () => 0m);
+
+            action.Should().Throw<InvalidOperationException>()
+                           .WithMessage("'alias' is already added as and alias and cannot be used as function name");
+        }
+
+        [Fact]
         public void GetOriginalName_NoAlias()
         {
             var functions = new FunctionsRegistry().Add("some function", () => 1m);
