@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
 
@@ -199,6 +200,32 @@ namespace JustEvaluate.Tests
         }
 
         [Fact]
+        public void ArgumentsUsage_FromDictionary()
+        {
+            var arg = new Dictionary<string, decimal>() { { "Height", 3.45m }, { "Width", 4.155m } };
+            var parsed = new Parser().Parse("Width * Height");
+            var builder = CreateBuilder();
+
+            var func = builder.Build<Dictionary<string, decimal>>(parsed);
+            decimal result = func(arg);
+
+            result.Should().Be(arg["Height"] * arg["Width"]);
+        }
+
+        [Fact]
+        public void ArgumentsUsage_FromIDictionary()
+        {
+            IDictionary<string, decimal> arg = new Dictionary<string, decimal>() { { "Height", 3.45m }, { "Width", 4.155m } };
+            var parsed = new Parser().Parse("Width * Height");
+            var builder = CreateBuilder();
+
+            var func = builder.Build<IDictionary<string, decimal>>(parsed);
+            decimal result = func(arg);
+
+            result.Should().Be(arg["Height"] * arg["Width"]);
+        }
+
+        [Fact]
         public void ArgumentsNames_CaseInsensitive()
         {
             var arg = new Arguments { Height = 3.45m, Width = 4.155m };
@@ -209,6 +236,45 @@ namespace JustEvaluate.Tests
             decimal result = func(arg);
 
             result.Should().Be(arg.Height * arg.Width);
+        }
+
+        [Fact]
+        public void Arguments_FromDictionary_CaseInsensitive_If_DictionaryComparerIsCaseInsensitive()
+        {
+            IDictionary<string, decimal> arg = new Dictionary<string, decimal>(StringComparer.OrdinalIgnoreCase) { { "Height", 3.45m }, { "Width", 4.155m } };
+            var parsed = new Parser().Parse("width * HEIGHT");
+            var builder = CreateBuilder();
+
+            var func = builder.Build<IDictionary<string, decimal>>(parsed);
+            decimal result = func(arg);
+
+            result.Should().Be(arg["Height"] * arg["Width"]);
+        }
+
+        [Fact]
+        public void Arguments_FromIDictionary_CaseSensitive_If_DictionaryComparerIsCaseSensitive()
+        {
+            IDictionary<string, decimal> arg = new Dictionary<string, decimal>() { { "Height", 3.45m }, { "Width", 4.155m } };
+            var parsed = new Parser().Parse("width * HEIGHT");
+            var builder = CreateBuilder();
+
+            var func = builder.Build<IDictionary<string, decimal>>(parsed);
+            Action action = () => func(arg);
+            
+            action.Should().Throw<KeyNotFoundException>().WithMessage("The given key 'width' was not present in the dictionary.");
+        }
+
+        [Fact]
+        public void Arguments_FromDictionary_CaseSensitive_If_DictionaryComparerIsCaseSensitive()
+        {
+            var arg = new Dictionary<string, decimal>() { { "Height", 3.45m }, { "Width", 4.155m } };
+            var parsed = new Parser().Parse("width * HEIGHT");
+            var builder = CreateBuilder();
+
+            var func = builder.Build<Dictionary<string, decimal>>(parsed);
+            Action action = () => func(arg);
+
+            action.Should().Throw<KeyNotFoundException>().WithMessage("The given key 'width' was not present in the dictionary.");
         }
 
         [Fact]
@@ -340,6 +406,23 @@ namespace JustEvaluate.Tests
             var builder = new Builder(functions);
 
             Func<Arguments, decimal> func = builder.Build<Arguments>(parsed);
+            decimal result = func(arguments);
+
+            result.Should().Be(-73m);
+        }
+
+        [Fact]
+        public void Function_WithMultipleParameterExpression_WithArguments_FromDictionary()
+        {
+            var functions = new FunctionsRegistry();
+            functions.Add("PlusOne", x => x + 1m);
+            functions.Add("Calc", (x, y, z) => x * y - z);
+            var arguments = new Dictionary<string, decimal> { { "Height", 6m }, { "Width", 4 } };
+
+            var parsed = new Parser().Parse("Calc( (PlusOne(3) + Height) * 1.5, (PlusOne(13) - Width) / 2 * (-1), (((1-2) * Width) / 2))");
+            var builder = new Builder(functions);
+
+            Func<Dictionary<string, decimal>, decimal> func = builder.Build<Dictionary<string, decimal>>(parsed);
             decimal result = func(arguments);
 
             result.Should().Be(-73m);

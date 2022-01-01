@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FakeItEasy;
 using FluentAssertions;
 using Xunit;
@@ -140,6 +141,19 @@ namespace JustEvaluate.Tests
 
             A.CallTo(() => parser.Parse(input)).MustNotHaveHappened();
             A.CallTo(() => builder.Build<Arguments>(tokens)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public void Evaluate_WithDictionaryArgument()
+        {
+            var argument = new Dictionary<string, decimal>() { { "Height", 3.45m }, { "Width", 4.155m } };
+            var builder = new Builder(new FunctionsRegistry());
+            var evaluator = new Evaluator(new Parser(), builder, new CompiledExpressionsCache());
+            var input = "Width * Height";
+
+            var result = evaluator.Evaluate(input, argument);
+
+            result.Should().Be(argument["Height"] * argument["Width"]);
         }
     }
 }

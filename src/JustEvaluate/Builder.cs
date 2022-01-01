@@ -33,12 +33,17 @@ namespace JustEvaluate
         {
             ValidateBuiltInFunctions(tokens);
             var postfixTokens = ConvertToPostfix(tokens);
-            MapPropertyNames<TArg>(postfixTokens);
+            if(!IsDictionary(typeof(TArg)))
+            {
+                MapPropertyNames<TArg>(postfixTokens);
+            }
 
             var parameter = Expression.Parameter(typeof(TArg));
             Expression expression = CalculatePostfix<TArg>(postfixTokens, parameter);
             return Expression.Lambda<Func<TArg, decimal>>(expression, parameter).Compile(preferInterpretation: false);
         }
+
+        private static bool IsDictionary(Type type) => type == typeof(Dictionary<string, decimal>) || type == typeof(IDictionary<string, decimal>);
 
         private void ValidateBuiltInFunctions(IEnumerable<Token> tokens)
         {
@@ -183,7 +188,17 @@ namespace JustEvaluate
                     }
                     else if(token.IsName)
                     {
-                        calcStack.Push(Expression.Property(param, token.Value));
+                        if(IsDictionary(typeof(TParam)))
+                        {
+                            var key = Expression.Constant(token.Value, typeof(string));
+                            PropertyInfo indexer = param.Type.GetProperty("Item");
+
+                            calcStack.Push(Expression.Property(param, indexer, key));
+                        }
+                        else
+                        {
+                            calcStack.Push(Expression.Property(param, token.Value));
+                        }
                     }
                     else if(token.IsFunction)
                     {

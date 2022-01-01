@@ -73,14 +73,27 @@ class Args
     public decimal X { get; }
 }
 ...
-var result = evaluator.Evaluate("x + 1", new Args{ X = 1m });
-```  
+var result = evaluator.Evaluate("x + 1", new Args{ X = 1 });
+```   
+
+#### (v1.1.0) Dictionary Argument  
+
+`Dictionary<string, decimal>` and `IDictionary<string, decimal>` are supported as an argument. When building expression the dictionary indexer is used instead of property getter.  
+
+```csharp
+var result = evaluator.Evaluate("x + 1", new Dictionary<string, decimal>{ {"x", 1} });
+```   
+There are some caveats to have in mind:  
+- only `Dictionary<string, decimal>` and `IDictionary<string, decimal>` are supported
+- any dictionary with other key/value types than `string`/`decimal` will be treated as regular object and a property with the given name will be looked for
+- case sensitivity of arguments will be determined by the dictionary instance   
 
 ### Built-In Functions  
 
 Functions that are "known" and can be used without additional setup. Their names are "reserved" and cannot be overwritten by user-defined ones.  
 Curently supported are `if` and `not`.  
-[more](https://github.com/petar-m/JustEvaluate/wiki/Utility-Functions) 
+[more](https://github.com/petar-m/JustEvaluate/wiki/Utility-Functions)  
+
 
 ### User-Defined Functions  
 

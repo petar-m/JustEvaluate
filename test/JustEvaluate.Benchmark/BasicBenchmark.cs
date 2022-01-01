@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
 using JustEvaluate.UtilityFunctions;
 
@@ -27,7 +28,10 @@ namespace JustEvaluate.Benchmark
         public decimal Amount { get; set; }
 
         [Benchmark]
-        public decimal UsingEvaluator() => _evaluator.Evaluate(formula, new Input {Amount = Amount });
+        public decimal UsingEvaluatorWithObjectArgument() => _evaluator.Evaluate(formula, new Input {Amount = Amount });
+
+        [Benchmark]
+        public decimal UsingEvaluatorWithDictionaryArgument() => _evaluator.Evaluate(formula, new Dictionary<string, decimal> { { "Amount", Amount } });
 
         [Benchmark]
         public decimal UsingCompiledExpression() => _function(new Input { Amount = Amount });

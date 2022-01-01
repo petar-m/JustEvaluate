@@ -64,7 +64,8 @@ namespace JustEvaluate.Examples
             var commission = scope.ServiceProvider.GetRequiredService<Commission>();
             foreach(var amount in new[] { 0, 500, 50000, 200000 })
             {
-                WriteLine($"amount = {amount} comission={commission.Calculate(amount)}");
+                WriteLine($"amount = {amount} comission={commission.CalculateUsingAnonimousTypeArgument(amount)}");
+                WriteLine($"amount = {amount} comission={commission.CalculateUsingDictionaryArgument(amount)}");
             }
         }
     }
