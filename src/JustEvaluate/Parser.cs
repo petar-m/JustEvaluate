@@ -2,11 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace JustEvaluate
 {
+    public class ParserOptions
+    {
+        public bool EnableOrAsText { get; set; }
+
+        public bool EnableAndAsText { get; set; }
+    }
+
     public class Parser
     {
+        private readonly ParserOptions _options;
+
+        private static readonly Lazy<Regex> _matchAnd = new Lazy<Regex>(() => new Regex(" and ", RegexOptions.Compiled | RegexOptions.IgnoreCase));
+        private static readonly Lazy<Regex> _matchOr = new Lazy<Regex>(() => new Regex(" or ", RegexOptions.Compiled | RegexOptions.IgnoreCase));
+
+        public Parser()
+        {
+        }
+
+        public Parser(ParserOptions options)
+        {
+            _options = options;
+        }
+
         public virtual IEnumerable<Token> Parse(string input)
         {
             var builder = new StringBuilder(input);
@@ -14,6 +36,17 @@ namespace JustEvaluate
                                       .Replace("\n", string.Empty)
                                       .Replace("\t", string.Empty)
                                       .ToString();
+
+            if(_options?.EnableAndAsText == true)
+            {
+                cleanedInput = _matchAnd.Value.Replace(cleanedInput, " & ");
+            }
+
+            if(_options?.EnableOrAsText == true)
+            {
+                cleanedInput = _matchOr.Value.Replace(cleanedInput, " | ");
+            }
+
             var tokens = ParseToTokens(cleanedInput);
             ValidateBrackets(tokens);
             tokens = RemoveEmpty(tokens);

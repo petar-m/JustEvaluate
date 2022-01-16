@@ -76,7 +76,7 @@ class Args
 var result = evaluator.Evaluate("x + 1", new Args{ X = 1 });
 ```   
 
-#### (v1.1.0) Dictionary Argument  
+#### (1.1.0) Arguments as Dictionary  
 
 `Dictionary<string, decimal>` and `IDictionary<string, decimal>` are supported as an argument. When building expression the dictionary indexer is used instead of property getter.  
 
@@ -137,6 +137,24 @@ decimal result = evaluator.Evaluate("IIF(Multiply and Add One(2, 3), 2, 1)"); //
 
 
 Aliases for both arguments and functions are case insensitive.  
+
+#### (1.2.0) Option for Text Boolean Operators (`AND`, `OR`)  
+
+In addition to `&` and `|` using `AND` and `OR` is also supported if enabled by `ParserOptions`:   
+
+```csharp
+var parser = new Parser(new ParserOptions { EnableAndAsText = true, EnableOrAsText = true});
+...
+var result = evaluator.Evaluate("0 or 1 and 1");
+```  
+
+`AND` and `OR` are case insensitive.  
+They are not part of the parsing logic, instead they are directly replaced before parsing (`' AND '` with  `' & '`, `' OR '` with `' | '`).
+This may cause invalid expression if there are arguments named `AND` or `OR` because if surrounded by whitespace they will be replaced.  
+Since whitespace in not a terminal character, in example the expression `black and white` may be an argument name. But if  `Parser.EnableAndAsText = true`
+ it will become `black & white` which in this case will be wrong.
+
+
 
 ### Caching  
 

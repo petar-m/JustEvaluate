@@ -504,5 +504,57 @@ namespace JustEvaluate.Tests
             var f14 = f13.FunctionArguments[0][5];
             f14.FunctionArguments.Should().HaveCount(0);
         }
+
+        [Fact]
+        public void Parse_And()
+        {
+            var parser = new Parser();
+            var input = "a & b";
+
+            var result = parser.Parse(input).ToArray();
+
+            result[0].Type.Should().Be(TokenType.Name); 
+            result[1].Type.Should().Be(TokenType.And); 
+            result[2].Type.Should().Be(TokenType.Name);
+        }
+
+        [Fact]
+        public void Parse_And_Text()
+        {
+            var parser = new Parser(new ParserOptions { EnableAndAsText = true, EnableOrAsText = true});
+            var input = "a and b";
+
+            var result = parser.Parse(input).ToArray();
+
+            result[0].Type.Should().Be(TokenType.Name);
+            result[1].Type.Should().Be(TokenType.And);
+            result[2].Type.Should().Be(TokenType.Name);
+        }
+
+        [Fact]
+        public void Parse_Or()
+        {
+            var parser = new Parser();
+            var input = "a | b";
+
+            var result = parser.Parse(input).ToArray();
+
+            result[0].Type.Should().Be(TokenType.Name);
+            result[1].Type.Should().Be(TokenType.Or);
+            result[2].Type.Should().Be(TokenType.Name);
+        }
+
+        [Fact]
+        public void Parse_Or_Text()
+        {
+            var parser = new Parser(new ParserOptions { EnableOrAsText = true});
+            var input = "a OR b";
+
+            var result = parser.Parse(input).ToArray();
+
+            result[0].Type.Should().Be(TokenType.Name);
+            result[1].Type.Should().Be(TokenType.Or);
+            result[2].Type.Should().Be(TokenType.Name);
+        }
     }
 }
