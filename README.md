@@ -108,6 +108,26 @@ decimal result = evaluator.Evaluate("MyFunction(2, 3)"); // result = 7
 Function names  are case insensitive and can consist of anything but special characters `+ - * / . , ( ) > < = | &`   
 There are some functions defined and ready for use - check out [Utility Functions](https://github.com/petar-m/JustEvaluate/wiki/Utility-Functions)  
 
+#### (1.3.0) Call Method on Argument instance  
+
+A method on the argumet instance can be called as a function. Matching is case insensitive, so if the argument type has two methods that differ only by casing there will be and exception.  
+Functions are checked first - if there is one matching (by name and parameters count), it takes precedence. Only if not found a method will be looked for.   
+A method is eligible to be used as a function when:  
+ - returns decimal
+ - all parameters are decimal (or has no parameters)
+ - is public instance method  
+
+```csharp
+public class Args
+{
+    public decimal X { get; set; }
+
+    public decimal Modulo(decimal a, decimal b) => a % b;
+}
+...
+var result = evaluator.Evaluate("modulo(X + 5, X)", new Args{ X = 10 }); // result = 5
+```
+
 ### Aliases  
 
 Type properties can be referenced by multiple names using `AliasAttribute`.

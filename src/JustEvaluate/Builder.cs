@@ -215,8 +215,31 @@ namespace JustEvaluate
                         }
                         else
                         {
-                            var functionCall = FunctionsRegistry.Get(token.Value, token.FunctionArguments.Count);
-                            calcStack.Push(Expression.Invoke(functionCall, arguments));
+                            var functionCall = FunctionsRegistry.TryGet(token.Value, token.FunctionArguments.Count);
+                            if(functionCall != null)
+                            {
+                                calcStack.Push(Expression.Invoke(functionCall, arguments));
+                            }
+                            else
+                            {
+                                var methods = param.Type.GetMethods(BindingFlags.Instance | BindingFlags.IgnoreCase | BindingFlags.Public)
+                                                        .Where(x => string.Compare(token.Value, x.Name, StringComparison.OrdinalIgnoreCase) == 0 &&
+                                                                    x.GetParameters().Length == arguments.Length &&
+                                                                    x.GetParameters().All(p => p.ParameterType == typeof(decimal)) &&
+                                                                    x.ReturnType == typeof(decimal))
+                                                        .ToArray();
+                                if(methods.Length == 0)
+                                {
+                                    throw new InvalidOperationException($"There is no function '{token.Value}' with {token.FunctionArguments.Count} parameters defined; No method '.{token.Value}' found on argument of type {param.Type} taking {token.FunctionArguments.Count} parameters of type decimal and returning decimal");
+                                }
+                                else if(methods.Length > 1)
+                                {
+                                    var names = string.Join(",", methods.Select(x => x.Name));
+                                    throw new InvalidOperationException($"Ambiguous method '.{token.Value}' on type {param.Type}: can't decide between {names}");
+                                }
+
+                                calcStack.Push(Expression.Call(param, methods[0], arguments));
+                            }
                         }
                     }
                 }

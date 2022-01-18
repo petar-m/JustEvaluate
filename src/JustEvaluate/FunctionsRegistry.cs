@@ -38,11 +38,23 @@ namespace JustEvaluate
 
         public LambdaExpression Get(string name, int parametersCount)
         {
+            var function = TryGet(name, parametersCount);
+
+            if(function is null)
+            {
+                throw new InvalidOperationException($"There is no function '{name}' with {parametersCount} parameters defined");
+            }
+
+            return function;
+        }
+
+        public LambdaExpression TryGet(string name, int parametersCount)
+        {
             name = GetOriginalName(name);
 
             if(!_functions.TryGetValue(parametersCount, out var functions) || !functions.TryGetValue(name, out var function))
             {
-                throw new InvalidOperationException($"There is no function '{name}' with {parametersCount} parameters defined");
+                return null;
             }
 
             return function;

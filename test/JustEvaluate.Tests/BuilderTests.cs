@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using JustEvaluate.UtilityFunctions;
 using Xunit;
 
 namespace JustEvaluate.Tests
@@ -576,6 +577,20 @@ namespace JustEvaluate.Tests
 
             [Alias("Width")]
             public decimal Y { get; set; }
+
+            public decimal MethodWithoutParameters() => 10;
+
+            public decimal MethodOverload(decimal x) => x * 10;
+
+            public decimal MethodOverload(decimal x, decimal y) => x * y *10;
+
+            public decimal MethodX(string x) => 10;
+
+            public string MethodX() => string.Empty;
+
+            public decimal Method() => 1;
+            
+            public decimal method() => 1;
         }
 
         [Fact]
@@ -612,6 +627,102 @@ namespace JustEvaluate.Tests
             var result = builder.Build(parser.Parse("alias(1)"));
 
             result().Should().Be(0);
+        }
+
+        [Fact]
+        public void MethodCall()
+        {
+            var functions = new FunctionsRegistry();
+            var builder = new Builder(functions);
+            var parser = new Parser();
+
+            var result = builder.Build<Input5>(parser.Parse("MethodWithoutParameters()"));
+
+            result(new Input5()).Should().Be(10);
+        }
+
+        [Fact]
+        public void MethodCall_CaseInsensitive()
+        {
+            var functions = new FunctionsRegistry();
+            var builder = new Builder(functions);
+            var parser = new Parser();
+
+            var result = builder.Build<Input5>(parser.Parse("methoDwithoutpARAmeterS()"));
+
+            result(new Input5()).Should().Be(10);
+        }
+
+        [Fact]
+        public void MethodCall_OverloadResolvedByParametersCount()
+        {
+            var functions = new FunctionsRegistry();
+            var builder = new Builder(functions);
+            var parser = new Parser();
+
+            var result = builder.Build<Input5>(parser.Parse("MethodOverload(2, 3)"));
+
+            result(new Input5()).Should().Be(60);
+        }
+
+        [Fact]
+        public void MethodCall_AmbiguousName_Throws()
+        {
+            var functions = new FunctionsRegistry();
+            var builder = new Builder(functions);
+            var parser = new Parser();
+
+            Action action = () => _ = builder.Build<Input5>(parser.Parse("Method()"));
+
+            action.Should().Throw<InvalidOperationException>().WithMessage("Ambiguous method '.Method' on type JustEvaluate.Tests.BuilderTests+Input5: can't decide between Method,method");
+        }
+
+        [Fact]
+        public void MethodCall_MethodWithDecimalParametersNotFound_Throws()
+        {
+            var functions = new FunctionsRegistry();
+            var builder = new Builder(functions);
+            var parser = new Parser();
+
+            Action action = () => _ = builder.Build<Input5>(parser.Parse("MethodX(1)"));
+
+            action.Should().Throw<InvalidOperationException>().WithMessage("There is no function 'MethodX' with 1 parameters defined; No method '.MethodX' found on argument of type JustEvaluate.Tests.BuilderTests+Input5 taking 1 parameters of type decimal and returning decimal");
+        }
+
+        [Fact]
+        public void MethodCall_MethodReturningDecimalNotFound_Throws()
+        {
+            var functions = new FunctionsRegistry();
+            var builder = new Builder(functions);
+            var parser = new Parser();
+
+            Action action = () => _ = builder.Build<Input5>(parser.Parse("MethodX()"));
+
+            action.Should().Throw<InvalidOperationException>().WithMessage("There is no function 'MethodX' with 0 parameters defined; No method '.MethodX' found on argument of type JustEvaluate.Tests.BuilderTests+Input5 taking 0 parameters of type decimal and returning decimal");
+        }
+
+        [Fact]
+        public void MethodCall_ComplexArguments()
+        {
+            var functions = new FunctionsRegistry().AddMath();
+            var builder = new Builder(functions);
+            var parser = new Parser();
+
+            var result = builder.Build<Input5>(parser.Parse("1 + Min(MethodOverload(MethodOverload(X, 1000)), MethodOverload(Max(X, Y)))"))(new Input5 { X = 2, Y = 3 });
+
+            result.Should().Be(31);
+        }
+
+        [Fact]
+        public void MethodCall_FunctionTakesPrecedence()
+        {
+            var functions = new FunctionsRegistry().Add("MethodOverload", x => -12.345m);
+            var builder = new Builder(functions);
+            var parser = new Parser();
+
+            var result = builder.Build<Input5>(parser.Parse("MethodOverload(10)"))(new Input5 { X = 2, Y = 3 });
+
+            result.Should().Be(-12.345m);
         }
     }
 }
