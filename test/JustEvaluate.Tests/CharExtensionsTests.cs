@@ -13,7 +13,7 @@ namespace JustEvaluate.Tests
 
             Action action = () => nonTerminal.TerminalCharToTokenType();
 
-            action.Should().Throw<InvalidOperationException>($"Character '{nonTerminal}' is not terminal");
+            action.Should().Throw<InvalidOperationException>().WithMessage($"Character '{nonTerminal}' is not terminal");
         }
 
         [Theory]
@@ -464,7 +464,7 @@ namespace JustEvaluate.Tests
         {
             Action action = () => new char[] { 'a' }.TerminalSequenceToTokenType();
 
-            action.Should().Throw<ArgumentException>("Terminal sequence expected length is 2");
+            action.Should().Throw<ArgumentException>().WithMessage("Terminal sequence expected length is 2");
         }
 
         [Fact]
@@ -472,7 +472,7 @@ namespace JustEvaluate.Tests
         {
             Action action = () => new char[] { 'a', 'b', 'c' }.TerminalSequenceToTokenType();
 
-            action.Should().Throw<ArgumentException>("Terminal sequence expected length is 2");
+            action.Should().Throw<ArgumentException>().WithMessage("Terminal sequence expected length is 2");
         }
 
         [Fact]
@@ -481,7 +481,7 @@ namespace JustEvaluate.Tests
             var chars = new[] { 'a', 'b' };
             Action action = () => chars.TerminalSequenceToTokenType();
 
-            action.Should().Throw<ArgumentException>($"Invalid terminal sequence expected '{string.Join(string.Empty, chars)}'");
+            action.Should().Throw<ArgumentException>().WithMessage($"Invalid terminal sequence expected '{string.Join(string.Empty, chars)}'");
         }
     }
 }

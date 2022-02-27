@@ -262,7 +262,7 @@ namespace JustEvaluate.Tests
         {
             Action action = () => _parser.Parse(input);
 
-            action.Should().Throw<Exception>("Mismatched brackets");
+            action.Should().Throw<Exception>().WithMessage("Mismatched brackets");
         }
 
         [Theory]
@@ -275,7 +275,7 @@ namespace JustEvaluate.Tests
         {
             Action action = () => _parser.Parse(input).ToArray();
 
-            action.Should().Throw<InvalidOperationException>("Misplaced function parameter separator");
+            action.Should().Throw<InvalidOperationException>().WithMessage("Misplaced function parameter separator");
         }
 
         [Fact]
@@ -319,7 +319,7 @@ namespace JustEvaluate.Tests
 
             Action action = () => _parser.Parse(input);
 
-            action.Should().Throw<Exception>("Mismatched brackets");
+            action.Should().Throw<Exception>().WithMessage("Mismatched brackets");
         }
 
         [Theory]

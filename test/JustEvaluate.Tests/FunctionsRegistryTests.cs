@@ -192,6 +192,18 @@ namespace JustEvaluate.Tests
         }
 
         [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("  ")]
+        [InlineData(null)]
+        public void Register_InvalidName_Throws(string name)
+        {
+            Action action = () => new FunctionsRegistry().Add(name, () => 0m);
+
+            action.Should().Throw<ArgumentException>().WithMessage("Function name cannot be empty, whitespace or null (Parameter 'name')");
+        }
+
+        [Theory]
         [InlineData("not")]
         [InlineData("NOT")]
         [InlineData("if")]

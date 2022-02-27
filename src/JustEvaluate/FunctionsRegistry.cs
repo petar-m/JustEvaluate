@@ -102,6 +102,11 @@ namespace JustEvaluate
 
         private FunctionsRegistry AddInternal(string name, LambdaExpression expression, bool allowReplace)
         {
+            if(string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("Function name cannot be empty, whitespace or null", nameof(name));
+            }
+
             if(IsBuiltInFunction(name))
             {
                 throw new InvalidOperationException($"'{name}' is reserved for built-in function and user defined function with the same name is not allowed");

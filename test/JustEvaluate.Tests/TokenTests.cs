@@ -131,7 +131,7 @@ namespace JustEvaluate.Tests
         {
             Action action = () => { Token t = new Token('f'); };
 
-            action.Should().Throw<InvalidOperationException>();
+            action.Should().Throw<InvalidOperationException>().WithMessage($"Character 'f' is not terminal");
         }
 
         [Theory(DisplayName = "Consrtuct_From_NumericString")]
@@ -353,7 +353,7 @@ namespace JustEvaluate.Tests
 
             Action action = () => token.ChangeToFunction();
 
-            action.Should().Throw<Exception>($"Cannot change '{token.Type}' to function");
+            action.Should().Throw<Exception>().WithMessage($"Cannot change '{token.Type}' to function");
         }
 
         [Theory]
@@ -373,7 +373,7 @@ namespace JustEvaluate.Tests
 
             Action action = () => token1.LessOrEqualPrecendanceOver(token2);
 
-            action.Should().Throw<InvalidOperationException>("Only operators support precendence");
+            action.Should().Throw<InvalidOperationException>().WithMessage("Only operators support precendence");
         }
 
         [Theory]
